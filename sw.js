@@ -1,9 +1,11 @@
 // Mobile Preview — service worker (cache-first shell, network-first for URLs)
-const CACHE_NAME = 'mobile-preview-v1';
+const CACHE_NAME = 'mobile-preview-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
+  './favicon.ico',
+  './icon-maskable-512.png',
   './icon-192.png',
   './icon-512.png',
   './apple-touch-icon.png'
