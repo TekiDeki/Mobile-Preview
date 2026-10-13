@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobile Preview - Mobile/Tablet Preview</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #1e1e2e;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ===== TOOLBAR ===== */
+  .toolbar {
+    background: #2a2a3e;
+    padding: 12px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    border-bottom: 1px solid #3a3a4e;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    z-index: 100;
+  }
+
+  .toolbar-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .toolbar label {
+    font-size: 13px;
+    color: #aaa;
+    font-weight: 500;
+  }
+
+  .btn {
+    background: #3a3a5e;
+    color: #e0e0e0;
+    border: 1px solid #4a4a6e;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn:hover {
+    background: #4a4a7e;
+    border-color: #6a6a9e;
+    transform: translateY(-1px);
+  }
+
+  .btn.active {
+    background: #6366f1;
+    border-color: #818cf8;
+    color: white;
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
+  }
+
+  .btn.primary {
+    background: #6366f1;
+    border-color: #818cf8;
+  }
+
+  .btn.primary:hover {
+    background: #7c7ff5;
+  }
+
+  .input-text {
+    background: #1a1a2e;
+    border: 1px solid #4a4a6e;
+    color: #e0e0e0;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    width: 280px;
+  }
+
+  .input-text:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+  }
+
+  .input-num {
+    background: #1a1a2e;
+    border: 1px solid #4a4a6e;
+    color: #e0e0e0;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    width: 80px;
+    text-align: center;
+  }
+
+  .input-num:focus {
+    outline: none;
+    border-color: #6366f1;
+  }
+
+  /* ===== DEVICE SELECTOR ===== */
+  .device-selector {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .device-btn {
+    background: #3a3a5e;
+    border: 1px solid #4a4a6e;
+    color: #ccc;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 70px;
+  }
+
+  .device-btn:hover { background: #4a4a7e; }
+  .device-btn.active {
+    background: #6366f1;
+    border-color: #818cf8;
+    color: white;
+  }
+
+  .device-btn .icon { font-size: 16px; }
+  .device-btn .name { font-size: 10px; margin-top: 2px; }
+  .device-btn .size { font-size: 9px; opacity: 0.7; }
+
+  /* ===== ASPECT RATIO SELECTOR ===== */
+  .ratio-selector {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .ratio-btn {
+    background: #3a3a5e;
+    border: 1px solid #4a4a6e;
+    color: #ccc;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 60px;
+    gap: 3px;
+  }
+
+  .ratio-btn:hover { background: #4a4a7e; }
+  .ratio-btn.active {
+    background: #ec4899;
+    border-color: #f472b6;
+    color: white;
+    box-shadow: 0 0 12px rgba(236, 72, 153, 0.5);
+  }
+
+  .ratio-btn .ratio-preview {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ratio-btn .ratio-box {
+    background: #818cf8;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+
+  .ratio-btn.active .ratio-box { background: white; }
+
+  .ratio-btn .ratio-label {
+    font-size: 10px;
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+  }
+
+  /* ===== ORIENTATION ===== */
+  .orientation-btn {
+    background: #3a3a5e;
+    border: 1px solid #4a4a6e;
+    color: #ccc;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+  }
+
+  .orientation-btn.active {
+    background: #6366f1;
+    border-color: #818cf8;
+    color: white;
+  }
+
+  /* ===== PREVIEW AREA ===== */
+  .preview-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    overflow: auto;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+      #1e1e2e;
+    min-height: 0;
+    /* wrapper flex that perfectly centers any size */
+    position: relative;
+  }
+
+  /* Inner wrapper for correct centering when content is wider than the container */
+  .preview-inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    flex-shrink: 0;
+  }
+
+  /* ===== DEVICE FRAME ===== */
+  .device-frame {
+    position: relative;
+    background: #000;
+    border-radius: 40px;
+    padding: 12px;
+    box-shadow:
+      0 0 0 2px #333,
+      0 0 0 4px #1a1a1a,
+      0 20px 60px rgba(0,0,0,0.6),
+      0 0 80px rgba(99, 102, 241, 0.15);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .device-frame.tablet { border-radius: 24px; padding: 16px; }
+
+  .device-frame .notch {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 24px;
+    background: #000;
+    border-radius: 0 0 16px 16px;
+    z-index: 10;
+    display: none;
+  }
+
+  .device-frame.phone .notch { display: block; }
+
+  .device-frame .camera {
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    background: #1a1a2e;
+    border-radius: 50%;
+    z-index: 11;
+    display: none;
+    box-shadow: inset 0 0 2px #444;
+  }
+
+  .device-frame.phone .camera { display: block; }
+
+  /* ===== SCREEN ===== */
+  .screen {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border-radius: 28px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .device-frame.tablet .screen { border-radius: 12px; }
+
+  .screen iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+    background: #fff;
+  }
+
+  /* ===== EMPTY STATE ===== */
+  .empty-state {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ===== ZOOM CONTROL ===== */
+  .zoom-control {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #1a1a2e;
+    border-radius: 6px;
+    padding: 2px;
+    border: 1px solid #4a4a6e;
+  }
+
+  .zoom-control button {
+    background: transparent;
+    border: none;
+    color: #ccc;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .zoom-control button:hover { background: #3a3a5e; }
+
+  .zoom-control span {
+    font-size: 12px;
+    color: #aaa;
+    min-width: 40px;
+    text-align: center;
+  }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: #1a1a2e; }
+  ::-webkit-scrollbar-thumb { background: #4a4a6e; border-radius: 5px; }
+  ::-webkit-scrollbar-thumb:hover { background: #6a6a9e; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .toolbar { padding: 10px; gap: 8px; }
+    .input-text { width: 180px; }
+    .device-btn { min-width: 60px; padding: 5px 8px; }
+    .device-btn .name { font-size: 9px; }
+    .ratio-btn { min-width: 50px; padding: 4px 6px; }
+  }
+
+  /* ===== LOADING ===== */
+  .loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 50;
+    border-radius: 28px;
+  }
+
+  .loading-overlay.active { display: flex; }
+
+  .spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #e0e0e0;
+    border-top-color: #6366f1;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-overlay p { color: #666; font-size: 13px; }
+
+  /* ===== MODE TABS ===== */
+  .mode-tabs {
+    display: flex;
+    gap: 0;
+    background: #1a1a2e;
+    border-radius: 6px;
+    padding: 3px;
+    border: 1px solid #4a4a6e;
+  }
+
+  .mode-tab {
+    background: transparent;
+    border: none;
+    color: #888;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .mode-tab.active { background: #6366f1; color: white; }
+  .mode-tab:hover:not(.active) { color: #ccc; }
+
+  .panel { display: none; }
+  .panel.active { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+  /* ===== DONATION FOOTER ===== */
+  .footer-donation {
+    background: #2a2a3e;
+    border-top: 1px solid #3a3a4e;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+  }
+
+  .donation-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 26px 14px 20px;
+    background: linear-gradient(135deg, #ffdd57 0%, #ffb347 50%, #ff8c42 100%);
+    color: #3a2a00;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    box-shadow:
+      0 6px 20px rgba(255, 140, 66, 0.45),
+      0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+      0 2px 0 rgba(255, 255, 255, 0.4) inset;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .donation-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    transition: left 0.6s;
+  }
+
+  .donation-btn:hover::before { left: 100%; }
+
+  .donation-btn:hover {
+    transform: translateY(-3px) scale(1.04);
+    box-shadow:
+      0 12px 30px rgba(255, 140, 66, 0.6),
+      0 0 0 1px rgba(255, 255, 255, 0.3) inset,
+      0 2px 0 rgba(255, 255, 255, 0.5) inset;
+  }
+
+  .donation-btn:active { transform: translateY(-1px) scale(1.01); }
+
+  .donation-btn .coffee-icon {
+    font-size: 26px;
+    display: inline-block;
+    transition: transform 0.3s;
+  }
+
+  .donation-btn:hover .coffee-icon {
+    transform: rotate(-10deg) scale(1.15);
+  }
+
+  .donation-btn .coffee-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+    text-align: left;
+  }
+
+  .donation-btn .coffee-text .main {
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  .donation-btn .coffee-text .sub {
+    font-size: 10px;
+    font-weight: 600;
+    opacity: 0.75;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .donation-btn .paypal-icon {
+    font-size: 18px;
+    opacity: 0.85;
+  }
+
+  @media (max-width: 600px) {
+    .donation-btn { padding: 12px 18px; }
+    .donation-btn .coffee-text .sub { display: none; }
+    .donation-btn .coffee-icon { font-size: 22px; }
+    .donation-btn .coffee-text .main { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== TOOLBAR ===== -->
+<div class="toolbar">
+  <div class="toolbar-group">
+    <button class="btn primary" onclick="document.getElementById('fileInput').click()">
+      📁 Load file
+    </button>
+    <input type="file" id="fileInput" accept=".html,.htm" style="display:none" onchange="loadLocalFile(event)">
+  </div>
+
+  <div class="toolbar-group">
+    <input type="text" class="input-text" id="urlInput" placeholder="https://example.com/page.html" onkeydown="if(event.key==='Enter')loadFromUrl()">
+    <button class="btn" onclick="loadFromUrl()">🌐 Load URL</button>
+  </div>
+
+  <div class="toolbar-group">
+    <label>Orientation:</label>
+    <button class="orientation-btn active" id="btnPortrait" onclick="setOrientation('portrait')" title="Portrait">📱</button>
+    <button class="orientation-btn" id="btnLandscape" onclick="setOrientation('landscape')" title="Landscape">🔄</button>
+  </div>
+
+  <div class="toolbar-group">
+    <label>Zoom:</label>
+    <div class="zoom-control">
+      <button onclick="changeZoom(-10)">−</button>
+      <span id="zoomLabel">100%</span>
+      <button onclick="changeZoom(10)">+</button>
+    </div>
+  </div>
+
+  <div class="toolbar-group">
+    <button class="btn" onclick="reloadPreview()" title="Reload">🔄</button>
+    <button class="btn" onclick="openInNewTab()" title="New tab">↗</button>
+    <button class="btn" onclick="resetAll()" title="Reset">⟲ Reset</button>
+  </div>
+</div>
+
+<!-- ===== SELECTOR MODE ===== -->
+<div class="toolbar" style="padding: 8px 20px; gap: 16px;">
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="switchMode('device')">📱 Devices</button>
+    <button class="mode-tab" onclick="switchMode('ratio')">📐 Aspect ratio</button>
+    <button class="mode-tab" onclick="switchMode('custom')">⚙️ Custom</button>
+  </div>
+</div>
+
+<!-- ===== PANEL: DEVICES ===== -->
+<div class="toolbar panel active" id="panelDevice" style="padding: 8px 20px;">
+  <div class="toolbar-group">
+    <div class="device-selector" id="deviceSelector"></div>
+  </div>
+</div>
+
+<!-- ===== PANEL: ASPECT RATIOS ===== -->
+<div class="toolbar panel" id="panelRatio" style="padding: 8px 20px;">
+  <div class="toolbar-group">
+    <label>Screen format:</label>
+    <div class="ratio-selector" id="ratioSelector"></div>
+  </div>
+  <div class="toolbar-group">
+    <label>Base width:</label>
+    <input type="number" class="input-num" id="ratioBaseWidth" value="390" min="200" max="2000" onchange="applyRatio()">
+    <span style="font-size:12px;color:#888;">px</span>
+  </div>
+  <div class="toolbar-group">
+    <label>Display width:</label>
+    <input type="range" id="ratioDisplayScale" min="20" max="150" value="100" style="width:120px;" oninput="document.getElementById('ratioScaleLabel').textContent=this.value+'%';applyRatio();">
+    <span id="ratioScaleLabel" style="font-size:12px;color:#818cf8;min-width:40px;">100%</span>
+  </div>
+</div>
+
+<!-- ===== PANEL: CUSTOM ===== -->
+<div class="toolbar panel" id="panelCustom" style="padding: 8px 20px;">
+  <div class="toolbar-group">
+    <label>Width:</label>
+    <input type="number" class="input-num" id="customW" value="390" min="100" max="4000" onchange="applyCustom()">
+    <label>×</label>
+    <label>Height:</label>
+    <input type="number" class="input-num" id="customH" value="844" min="100" max="4000" onchange="applyCustom()">
+    <span style="font-size:12px;color:#888;">px</span>
+  </div>
+  <div class="toolbar-group">
+    <label>Frame type:</label>
+    <select id="customFrameType" class="input-num" style="width:120px;" onchange="applyCustom()">
+      <option value="phone">Phone</option>
+      <option value="tablet">Tablet</option>
+      <option value="none">No frame</option>
+    </select>
+  </div>
+  <div class="toolbar-group">
+    <label>Scale:</label>
+    <input type="range" id="customScale" min="20" max="150" value="100" style="width:120px;" oninput="document.getElementById('customScaleLabel').textContent=this.value+'%';applyCustom();">
+    <span id="customScaleLabel" style="font-size:12px;color:#818cf8;min-width:40px;">100%</span>
+  </div>
+</div>
+
+<!-- ===== PREVIEW AREA ===== -->
+<div class="preview-area" id="previewArea">
+  <div class="preview-inner">
+    <div class="device-frame phone" id="deviceFrame" style="display:none;">
+      <div class="notch"></div>
+      <div class="camera"></div>
+      <div class="screen" id="screen">
+        <div class="loading-overlay" id="loadingOverlay">
+          <div class="spinner"></div>
+          <p>Loading...</p>
+        </div>
+        <iframe id="previewFrame" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"></iframe>
+      </div>
+    </div>
+
+    <div class="empty-state" id="emptyState"></div>
+  </div>
+</div>
+
+<!-- ===== DONATION FOOTER ===== -->
+<footer class="footer-donation">
+  <a href="https://paypal.me/TekiDeki" target="_blank" rel="noopener noreferrer" class="donation-btn" title="Support the project with a coffee">
+    <span class="coffee-icon">☕</span>
+    <span class="coffee-text">
+      <span class="main">Deserve a coffee?</span>
+      <span class="sub">Support on PayPal</span>
+    </span>
+    <span class="paypal-icon">💳</span>
+  </a>
+</footer>
+
+<script>
+// ===== DEVICE PRESETS =====
+const devices = [
+  { id: 'iphone-se',    name: 'iPhone SE',    width: 375,  height: 667,  type: 'phone', icon: '📱' },
+  { id: 'iphone-12',    name: 'iPhone 12',    width: 390,  height: 844,  type: 'phone', icon: '📱' },
+  { id: 'iphone-14-pro',name: 'iPhone 14 Pro',width: 393,  height: 852,  type: 'phone', icon: '📱' },
+  { id: 'iphone-15-pro-max', name: 'iPhone 15 Pro Max', width: 430, height: 932, type: 'phone', icon: '📱' },
+  { id: 'pixel-7',      name: 'Pixel 7',      width: 412,  height: 915,  type: 'phone', icon: '📱' },
+  { id: 'galaxy-s23',   name: 'Galaxy S23',   width: 360,  height: 780,  type: 'phone', icon: '📱' },
+  { id: 'ipad-mini',    name: 'iPad Mini',    width: 768,  height: 1024, type: 'tablet', icon: '📟' },
+  { id: 'ipad-air',     name: 'iPad Air',     width: 820,  height: 1180, type: 'tablet', icon: '📟' },
+  { id: 'ipad-pro',     name: 'iPad Pro 11"', width: 834,  height: 1194, type: 'tablet', icon: '📟' },
+  { id: 'ipad-pro-12',  name: 'iPad Pro 12.9"', width: 1024, height: 1366, type: 'tablet', icon: '📟' },
+  { id: 'galaxy-tab',   name: 'Galaxy Tab S8',width: 800,  height: 1280, type: 'tablet', icon: '📟' },
+  { id: 'desktop-sm',   name: 'Desktop Small',width: 1280, height: 800,  type: 'desktop', icon: '🖥️' },
+];
+
+// ===== ASPECT RATIOS =====
+const aspectRatios = [
+  { id: '1-1',      label: '1:1',      w: 1,  h: 1,  desc: 'Square, Instagram post' },
+  { id: '4-3',      label: '4:3',      w: 4,  h: 3,  desc: 'iPad, old devices' },
+  { id: '3-2',      label: '3:2',      w: 3,  h: 2,  desc: 'iPhone 4s, old Android' },
+  { id: '16-10',    label: '16:10',    w: 16, h: 10, desc: 'Android tablets, 8:5' },
+  { id: '5-3',      label: '5:3',      w: 5,  h: 3,  desc: 'Windows Phone (Lumia)' },
+  { id: '16-9',     label: '16:9',     w: 16, h: 9,  desc: 'Classic mainstream Android' },
+  { id: '18-9',     label: '18:9',     w: 18, h: 9,  desc: 'Galaxy S8, LG G6' },
+  { id: '18.5-9',   label: '18.5:9',   w: 18.5, h: 9, desc: 'Galaxy S8/S9 Infinity' },
+  { id: '19-9',     label: '19:9',     w: 19, h: 9,  desc: 'Galaxy S10e, Nokia X6' },
+  { id: '19.5-9',   label: '19.5:9',   w: 19.5, h: 9, desc: 'Modern iPhone, LG G7' },
+  { id: '20-9',     label: '20:9',     w: 20, h: 9,  desc: 'Galaxy S10 Lite, S20' },
+  { id: '21-9',     label: '21:9',     w: 21, h: 9,  desc: 'Sony Xperia, ultra-wide' },
+  { id: '9-16',     label: '9:16',     w: 9,  h: 16, desc: 'Vertical portrait, Stories/Reels/TikTok' },
+];
+
+// ===== STATE =====
+let currentDevice = devices[1];
+let currentRatio = null;
+let mode = 'device';
+let orientation = 'portrait';
+let zoom = 100;
+let currentUrl = '';
+let currentBlobUrl = null;
+let currentHtmlContent = null;
+let isLocalFile = false;
+
+// ===== INIT =====
+function init() {
+  renderDeviceButtons();
+  renderRatioButtons();
+  selectDevice(currentDevice.id);
+}
+
+function renderDeviceButtons() {
+  const container = document.getElementById('deviceSelector');
+  container.innerHTML = devices.map(d => `
+    <button class="device-btn" data-id="${d.id}" onclick="selectDevice('${d.id}')">
+      <span class="icon">${d.icon}</span>
+      <span class="name">${d.name}</span>
+      <span class="size">${d.width}×${d.height}</span>
+    </button>
+  `).join('');
+}
+
+function renderRatioButtons() {
+  const container = document.getElementById('ratioSelector');
+  container.innerHTML = aspectRatios.map(r => {
+    const maxDim = 24;
+    let boxW, boxH;
+    if (r.w >= r.h) {
+      boxW = maxDim;
+      boxH = Math.round(maxDim * (r.h / r.w));
+    } else {
+      boxH = maxDim;
+      boxW = Math.round(maxDim * (r.w / r.h));
+    }
+    return `
+      <button class="ratio-btn" data-id="${r.id}" onclick="selectRatio('${r.id}')" title="${r.desc}">
+        <div class="ratio-preview">
+          <div class="ratio-box" style="width:${boxW}px;height:${boxH}px;"></div>
+        </div>
+        <span class="ratio-label">${r.label}</span>
+      </button>
+    `;
+  }).join('');
+}
+
+// ===== MODE SWITCH =====
+function switchMode(newMode) {
+  mode = newMode;
+  const modes = ['device', 'ratio', 'custom'];
+  document.querySelectorAll('.mode-tab').forEach((t, i) => {
+    t.classList.toggle('active', modes[i] === newMode);
+  });
+  document.getElementById('panelDevice').classList.toggle('active', newMode === 'device');
+  document.getElementById('panelRatio').classList.toggle('active', newMode === 'ratio');
+  document.getElementById('panelCustom').classList.toggle('active', newMode === 'custom');
+
+  if (newMode === 'device') applyDevice();
+  else if (newMode === 'ratio') applyRatio();
+  else if (newMode === 'custom') applyCustom();
+}
+
+// ===== DEVICE SELECT =====
+function selectDevice(id) {
+  currentDevice = devices.find(d => d.id === id) || devices[0];
+  currentRatio = null;
+  document.querySelectorAll('.device-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.id === id);
+  });
+  document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
+  applyDevice();
+}
+
+// ===== RATIO SELECT =====
+function selectRatio(id) {
+  currentRatio = aspectRatios.find(r => r.id === id);
+  document.querySelectorAll('.ratio-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.id === id);
+  });
+  document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+  applyRatio();
+}
+
+// ===== ORIENTATION =====
+function setOrientation(o) {
+  orientation = o;
+  document.getElementById('btnPortrait').classList.toggle('active', o === 'portrait');
+  document.getElementById('btnLandscape').classList.toggle('active', o === 'landscape');
+  reapply();
+}
+
+// ===== ZOOM =====
+function changeZoom(delta) {
+  zoom = Math.max(25, Math.min(200, zoom + delta));
+  document.getElementById('zoomLabel').textContent = zoom + '%';
+  reapply();
+}
+
+function reapply() {
+  if (mode === 'device') applyDevice();
+  else if (mode === 'ratio') applyRatio();
+  else applyCustom();
+}
+
+// ===== APPLY DEVICE =====
+function applyDevice() {
+  let w = currentDevice.width;
+  let h = currentDevice.height;
+  if (orientation === 'landscape') [w, h] = [h, w];
+  renderFrame(w, h, currentDevice.type, zoom / 100, currentDevice.name);
+}
+
+// ===== APPLY RATIO =====
+function applyRatio() {
+  if (!currentRatio) currentRatio = aspectRatios[5];
+  const baseWidth = parseFloat(document.getElementById('ratioBaseWidth').value) || 390;
+  const displayScale = (parseFloat(document.getElementById('ratioDisplayScale').value) || 100) / 100;
+
+  let w, h;
+  const ratioVal = currentRatio.w / currentRatio.h;
+
+  if (orientation === 'portrait') {
+    w = baseWidth;
+    h = Math.round(w / ratioVal);
+    if (h < w) { w = Math.round(baseWidth * ratioVal); h = baseWidth; }
+  } else {
+    w = baseWidth;
+    h = Math.round(w / ratioVal);
+    if (h > w) { w = Math.round(baseWidth * ratioVal); h = baseWidth; }
+  }
+
+  const ratioLabel = `${currentRatio.label} (${currentRatio.desc})`;
+  renderFrame(w, h, 'phone', displayScale, ratioLabel);
+}
+
+// ===== APPLY CUSTOM =====
+function applyCustom() {
+  const w = parseInt(document.getElementById('customW').value) || 390;
+  const h = parseInt(document.getElementById('customH').value) || 844;
+  const scale = (parseFloat(document.getElementById('customScale').value) || 100) / 100;
+  const frameType = document.getElementById('customFrameType').value;
+
+  let ww = w, hh = h;
+  if (orientation === 'landscape') [ww, hh] = [h, w];
+
+  renderFrame(ww, hh, frameType, scale, `Custom ${ww}×${hh}`);
+}
+
+// ===== RENDER FRAME =====
+function renderFrame(w, h, frameType, scale, label) {
+  const frame = document.getElementById('deviceFrame');
+  const screen = document.getElementById('screen');
+
+  const previewArea = document.getElementById('previewArea');
+  // Using available width/height of the preview area
+  const availW = previewArea.clientWidth - 80;
+  const availH = previewArea.clientHeight - 80;
+
+  const framePadding = frameType === 'none' ? 0 : (frameType === 'tablet' ? 32 : 24);
+  const totalW = (w + framePadding) * scale;
+  const totalH = (h + framePadding) * scale;
+
+  if (totalW > availW || totalH > availH) {
+    const fitScale = Math.min(availW / (w + framePadding), availH / (h + framePadding));
+    scale = Math.min(scale, fitScale);
+  }
+
+  if (frameType === 'none') {
+    frame.className = 'device-frame none';
+    frame.style.background = 'transparent';
+    frame.style.borderRadius = '0';
+    frame.style.padding = '0';
+    frame.style.boxShadow = 'none';
+  } else {
+    frame.className = 'device-frame ' + frameType;
+    frame.style.background = '#000';
+    frame.style.borderRadius = frameType === 'phone' ? '40px' : '24px';
+    frame.style.padding = frameType === 'phone' ? '12px' : '16px';
+    frame.style.boxShadow = '0 0 0 2px #333, 0 0 0 4px #1a1a1a, 0 20px 60px rgba(0,0,0,0.6), 0 0 80px rgba(99, 102, 241, 0.15)';
+  }
+
+  frame.style.transform = `scale(${scale})`;
+  frame.style.transformOrigin = 'center center';
+  frame.style.display = 'block';
+
+  screen.style.width = w + 'px';
+  screen.style.height = h + 'px';
+  screen.style.borderRadius = frameType === 'phone' ? '28px' : (frameType === 'tablet' ? '12px' : '0');
+}
+
+// ===== LOAD LOCAL FILE =====
+function loadLocalFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    currentHtmlContent = e.target.result;
+    isLocalFile = true;
+    showPreview(currentHtmlContent);
+  };
+  reader.readAsText(file);
+}
+
+// ===== LOAD FROM URL =====
+function loadFromUrl() {
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url) { alert('Enter a valid URL.'); return; }
+  let finalUrl = url;
+  if (!/^https?:\/\//i.test(url)) finalUrl = 'https://' + url;
+  currentUrl = finalUrl;
+  isLocalFile = false;
+  showPreview(finalUrl);
+}
+
+// ===== SHOW PREVIEW =====
+function showPreview(content) {
+  const emptyState = document.getElementById('emptyState');
+  const frame = document.getElementById('deviceFrame');
+  const iframe = document.getElementById('previewFrame');
+  const loading = document.getElementById('loadingOverlay');
+
+  emptyState.style.display = 'none';
+  frame.style.display = 'block';
+  loading.classList.add('active');
+
+  if (currentBlobUrl) { URL.revokeObjectURL(currentBlobUrl); currentBlobUrl = null; }
+
+  if (isLocalFile) {
+    const blob = new Blob([content], { type: 'text/html' });
+    currentBlobUrl = URL.createObjectURL(blob);
+    iframe.src = currentBlobUrl;
+  } else {
+    iframe.src = content;
+  }
+
+  reapply();
+  iframe.onload = function() { loading.classList.remove('active'); };
+  setTimeout(() => loading.classList.remove('active'), 5000);
+}
+
+function reloadPreview() {
+  const iframe = document.getElementById('previewFrame');
+  if (!iframe.src || iframe.src === 'about:blank') return;
+  const loading = document.getElementById('loadingOverlay');
+  loading.classList.add('active');
+  iframe.src = iframe.src;
+  setTimeout(() => loading.classList.remove('active'), 3000);
+}
+
+function openInNewTab() {
+  const iframe = document.getElementById('previewFrame');
+  if (!iframe.src || iframe.src === 'about:blank') {
+    alert('No content to open.');
+    return;
+  }
+  window.open(iframe.src, '_blank');
+}
+
+function resetAll() {
+  currentDevice = devices[1];
+  currentRatio = null;
+  orientation = 'portrait';
+  zoom = 100;
+  document.getElementById('zoomLabel').textContent = '100%';
+  document.getElementById('btnPortrait').classList.add('active');
+  document.getElementById('btnLandscape').classList.remove('active');
+  document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
+  switchMode('device');
+  selectDevice('iphone-12');
+}
+
+window.addEventListener('resize', () => {
+  if (document.getElementById('deviceFrame').style.display !== 'none') reapply();
+});
+
+init();
+</script>
+
+</body>
+</html>
