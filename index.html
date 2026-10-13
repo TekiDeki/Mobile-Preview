@@ -1,31 +1,223 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mobile Preview - Mobile/Tablet Preview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title data-i18n="title">Mobile Preview — Test any page on iPhone, iPad & Android</title>
+<meta name="description" data-i18n-meta="description" content="Preview any HTML file or URL in real iPhone, iPad, Android and desktop frames. Free, offline-ready, no tracking. 12 devices, 13 aspect ratios, custom sizes.">
+<meta name="keywords" content="mobile preview, responsive tester, device simulator, iphone preview, ipad preview, android preview, mobile emulator, responsive design tool, previzualizare mobilă, simulator mobil, testare responsive, pregled na mobilnom, simulator telefona, мобилни преглед, симулатор телефона">
+<meta name="author" content="TekiDeki">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#3b82f6">
+<link rel="canonical" href="https://tekideki.github.io/Mobile-Preview/">
+
+<!-- hreflang: 4 languages -->
+<link rel="alternate" hreflang="ro" href="https://tekideki.github.io/Mobile-Preview/">
+<link rel="alternate" hreflang="en" href="https://tekideki.github.io/Mobile-Preview/?lang=en">
+<link rel="alternate" hreflang="sr-Latn" href="https://tekideki.github.io/Mobile-Preview/?lang=sr-Latn">
+<link rel="alternate" hreflang="sr-Cyrl" href="https://tekideki.github.io/Mobile-Preview/?lang=sr-Cyrl">
+<link rel="alternate" hreflang="x-default" href="https://tekideki.github.io/Mobile-Preview/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mobile Preview — Test any page on iPhone, iPad & Android">
+<meta property="og:description" content="Preview any HTML file or URL in real device frames. Free, offline, no tracking. 12 devices, 13 aspect ratios.">
+<meta property="og:url" content="https://tekideki.github.io/Mobile-Preview/">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ro_RO">
+<meta property="og:locale:alternate" content="sr_RS">
+<meta property="og:image" content="https://tekideki.github.io/Mobile-Preview/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mobile Preview — Test any page on iPhone, iPad & Android">
+<meta name="twitter:description" content="Preview any HTML file or URL in real device frames. Free, offline, no tracking.">
+<meta name="twitter:image" content="https://tekideki.github.io/Mobile-Preview/og-image.png">
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mobile Preview">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Mobile Preview",
+  "alternateName": "Mobile & Tablet Preview",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "author": { "@type": "Person", "name": "TekiDeki", "url": "https://github.com/TekiDeki" },
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "inLanguage": ["ro", "en", "sr-Latn", "sr-Cyrl"],
+  "description": "Preview any HTML file or URL in real iPhone, iPad, Android and desktop frames. Free, offline-ready, no tracking.",
+  "url": "https://tekideki.github.io/Mobile-Preview/",
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires JavaScript"
+}
+</script>
+
 <style>
+  /* ===== THEME TOKENS ===== */
+  :root, [data-theme="dark"] {
+    --bg: #0e1526;
+    --bg-2: #141d33;
+    --bg-3: #1a2440;
+    --surface: #1e2a45;
+    --surface-hover: #273657;
+    --border: #2e3d5e;
+    --border-hover: #425585;
+    --text: #e4e9f4;
+    --text-2: #9aa7bf;
+    --text-3: #6b7893;
+    --accent: #3b82f6;
+    --accent-hover: #60a5fa;
+    --accent-soft: rgba(59, 130, 246, 0.35);
+    --accent-glow: rgba(59, 130, 246, 0.16);
+    --accent-2: #ec4899;
+    --accent-2-soft: rgba(236, 72, 153, 0.45);
+    --input-bg: #0b1120;
+    --frame-bg: #000;
+    --frame-ring-1: #333;
+    --frame-ring-2: #1a1a1a;
+    --frame-shadow: rgba(0, 0, 0, 0.6);
+    --scroll-track: #0b1120;
+    --scroll-thumb: #2e3d5e;
+    --scroll-thumb-hover: #425585;
+    --overlay: rgba(14, 21, 38, 0.92);
+    --overlay-text: #9aa7bf;
+    --preview-bg: radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.10) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.09) 0%, transparent 50%),
+                  #0e1526;
+    --shadow-toolbar: 0 2px 10px rgba(0, 0, 0, 0.35);
+    --shadow-footer: 0 -4px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  [data-theme="light"] {
+    --bg: #f4f6fb;
+    --bg-2: #ffffff;
+    --bg-3: #eef1f8;
+    --surface: #e8edf7;
+    --surface-hover: #dde4f2;
+    --border: #cbd5e8;
+    --border-hover: #a9b8d4;
+    --text: #17233d;
+    --text-2: #55648a;
+    --text-3: #8391ad;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --accent-soft: rgba(37, 99, 235, 0.28);
+    --accent-glow: rgba(37, 99, 235, 0.14);
+    --accent-2: #db2777;
+    --accent-2-soft: rgba(219, 39, 119, 0.35);
+    --input-bg: #ffffff;
+    --frame-bg: #111827;
+    --frame-ring-1: #94a3b8;
+    --frame-ring-2: #475569;
+    --frame-shadow: rgba(23, 35, 61, 0.22);
+    --scroll-track: #eef1f8;
+    --scroll-thumb: #c2cce0;
+    --scroll-thumb-hover: #a9b8d4;
+    --overlay: rgba(255, 255, 255, 0.92);
+    --overlay-text: #55648a;
+    --preview-bg: radial-gradient(circle at 20% 30%, rgba(37, 99, 235, 0.09) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 70%, rgba(219, 39, 119, 0.07) 0%, transparent 50%),
+                  #f4f6fb;
+    --shadow-toolbar: 0 2px 10px rgba(23, 35, 61, 0.10);
+    --shadow-footer: 0 -4px 20px rgba(23, 35, 61, 0.10);
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #1e1e2e;
-    color: #e0e0e0;
+    background: var(--bg);
+    color: var(--text);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    transition: background 0.25s ease, color 0.25s ease;
   }
+
+  /* ===== TOP BAR (lang + theme) ===== */
+  .topbar {
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--border);
+    padding: 6px 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .topbar .spacer { margin-right: auto; }
+
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-2);
+    letter-spacing: 0.2px;
+  }
+
+  .topbar-brand .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent-soft);
+  }
+
+  .icon-btn {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 7px 13px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .icon-btn:hover { background: var(--surface-hover); border-color: var(--border-hover); }
+  .icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .select-lang {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 7px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .select-lang:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   /* ===== TOOLBAR ===== */
   .toolbar {
-    background: #2a2a3e;
+    background: var(--bg-2);
     padding: 12px 20px;
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
     align-items: center;
-    border-bottom: 1px solid #3a3a4e;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-toolbar);
     z-index: 100;
   }
 
@@ -37,14 +229,14 @@
 
   .toolbar label {
     font-size: 13px;
-    color: #aaa;
+    color: var(--text-2);
     font-weight: 500;
   }
 
   .btn {
-    background: #3a3a5e;
-    color: #e0e0e0;
-    border: 1px solid #4a4a6e;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
     padding: 8px 14px;
     border-radius: 6px;
     cursor: pointer;
@@ -55,47 +247,52 @@
   }
 
   .btn:hover {
-    background: #4a4a7e;
-    border-color: #6a6a9e;
+    background: var(--surface-hover);
+    border-color: var(--border-hover);
     transform: translateY(-1px);
   }
 
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
   .btn.active {
-    background: #6366f1;
-    border-color: #818cf8;
-    color: white;
-    box-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
+    background: var(--accent);
+    border-color: var(--accent-hover);
+    color: #fff;
+    box-shadow: 0 0 12px var(--accent-soft);
   }
 
   .btn.primary {
-    background: #6366f1;
-    border-color: #818cf8;
+    background: var(--accent);
+    border-color: var(--accent-hover);
+    color: #fff;
   }
 
   .btn.primary:hover {
-    background: #7c7ff5;
+    background: var(--accent-hover);
   }
 
   .input-text {
-    background: #1a1a2e;
-    border: 1px solid #4a4a6e;
-    color: #e0e0e0;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
     padding: 8px 12px;
     border-radius: 6px;
     font-size: 13px;
     width: 280px;
   }
 
+  .input-text::placeholder { color: var(--text-3); }
+
   .input-text:focus {
     outline: none;
-    border-color: #6366f1;
-    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-soft);
   }
 
   .input-num {
-    background: #1a1a2e;
-    border: 1px solid #4a4a6e;
-    color: #e0e0e0;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
     padding: 8px 10px;
     border-radius: 6px;
     font-size: 13px;
@@ -105,20 +302,16 @@
 
   .input-num:focus {
     outline: none;
-    border-color: #6366f1;
+    border-color: var(--accent);
   }
 
   /* ===== DEVICE SELECTOR ===== */
-  .device-selector {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
+  .device-selector { display: flex; gap: 6px; flex-wrap: wrap; }
 
   .device-btn {
-    background: #3a3a5e;
-    border: 1px solid #4a4a6e;
-    color: #ccc;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-2);
     padding: 6px 12px;
     border-radius: 6px;
     cursor: pointer;
@@ -130,28 +323,25 @@
     min-width: 70px;
   }
 
-  .device-btn:hover { background: #4a4a7e; }
+  .device-btn:hover { background: var(--surface-hover); }
   .device-btn.active {
-    background: #6366f1;
-    border-color: #818cf8;
-    color: white;
+    background: var(--accent);
+    border-color: var(--accent-hover);
+    color: #fff;
   }
+  .device-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   .device-btn .icon { font-size: 16px; }
   .device-btn .name { font-size: 10px; margin-top: 2px; }
   .device-btn .size { font-size: 9px; opacity: 0.7; }
 
   /* ===== ASPECT RATIO SELECTOR ===== */
-  .ratio-selector {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
+  .ratio-selector { display: flex; gap: 6px; flex-wrap: wrap; }
 
   .ratio-btn {
-    background: #3a3a5e;
-    border: 1px solid #4a4a6e;
-    color: #ccc;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-2);
     padding: 6px 10px;
     border-radius: 6px;
     cursor: pointer;
@@ -164,29 +354,27 @@
     gap: 3px;
   }
 
-  .ratio-btn:hover { background: #4a4a7e; }
+  .ratio-btn:hover { background: var(--surface-hover); }
   .ratio-btn.active {
-    background: #ec4899;
-    border-color: #f472b6;
-    color: white;
-    box-shadow: 0 0 12px rgba(236, 72, 153, 0.5);
+    background: var(--accent-2);
+    border-color: var(--accent-2);
+    color: #fff;
+    box-shadow: 0 0 12px var(--accent-2-soft);
   }
+  .ratio-btn:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
 
   .ratio-btn .ratio-preview {
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
   }
 
   .ratio-btn .ratio-box {
-    background: #818cf8;
+    background: var(--accent-hover);
     border-radius: 2px;
     transition: all 0.2s;
   }
 
-  .ratio-btn.active .ratio-box { background: white; }
+  .ratio-btn.active .ratio-box { background: #fff; }
 
   .ratio-btn .ratio-label {
     font-size: 10px;
@@ -196,9 +384,9 @@
 
   /* ===== ORIENTATION ===== */
   .orientation-btn {
-    background: #3a3a5e;
-    border: 1px solid #4a4a6e;
-    color: #ccc;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-2);
     padding: 8px 12px;
     border-radius: 6px;
     cursor: pointer;
@@ -207,10 +395,11 @@
   }
 
   .orientation-btn.active {
-    background: #6366f1;
-    border-color: #818cf8;
-    color: white;
+    background: var(--accent);
+    border-color: var(--accent-hover);
+    color: #fff;
   }
+  .orientation-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   /* ===== PREVIEW AREA ===== */
   .preview-area {
@@ -220,16 +409,11 @@
     align-items: center;
     padding: 40px 20px;
     overflow: auto;
-    background:
-      radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
-      #1e1e2e;
+    background: var(--preview-bg);
     min-height: 0;
-    /* wrapper flex that perfectly centers any size */
     position: relative;
   }
 
-  /* Inner wrapper for correct centering when content is wider than the container */
   .preview-inner {
     display: flex;
     justify-content: center;
@@ -241,14 +425,14 @@
   /* ===== DEVICE FRAME ===== */
   .device-frame {
     position: relative;
-    background: #000;
+    background: var(--frame-bg);
     border-radius: 40px;
     padding: 12px;
     box-shadow:
-      0 0 0 2px #333,
-      0 0 0 4px #1a1a1a,
-      0 20px 60px rgba(0,0,0,0.6),
-      0 0 80px rgba(99, 102, 241, 0.15);
+      0 0 0 2px var(--frame-ring-1),
+      0 0 0 4px var(--frame-ring-2),
+      0 20px 60px var(--frame-shadow),
+      0 0 80px var(--accent-glow);
     transition: all 0.3s ease;
     flex-shrink: 0;
   }
@@ -257,11 +441,9 @@
 
   .device-frame .notch {
     position: absolute;
-    top: 12px;
-    left: 50%;
+    top: 12px; left: 50%;
     transform: translateX(-50%);
-    width: 120px;
-    height: 24px;
+    width: 120px; height: 24px;
     background: #000;
     border-radius: 0 0 16px 16px;
     z-index: 10;
@@ -272,11 +454,9 @@
 
   .device-frame .camera {
     position: absolute;
-    top: 18px;
-    left: 50%;
+    top: 18px; left: 50%;
     transform: translateX(-50%);
-    width: 8px;
-    height: 8px;
+    width: 8px; height: 8px;
     background: #1a1a2e;
     border-radius: 50%;
     z-index: 11;
@@ -288,8 +468,7 @@
 
   /* ===== SCREEN ===== */
   .screen {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     background: #fff;
     border-radius: 28px;
     overflow: hidden;
@@ -300,8 +479,7 @@
   .device-frame.tablet .screen { border-radius: 12px; }
 
   .screen iframe {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     border: none;
     display: block;
     background: #fff;
@@ -309,27 +487,38 @@
 
   /* ===== EMPTY STATE ===== */
   .empty-state {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-2);
   }
+
+  .empty-state .es-icon { font-size: 54px; opacity: 0.9; }
+  .empty-state .es-title { font-size: 20px; font-weight: 700; color: var(--text); }
+  .empty-state .es-text { font-size: 14px; max-width: 460px; line-height: 1.6; }
+  .empty-state .es-hint { font-size: 12px; color: var(--text-3); margin-top: 6px; }
 
   /* ===== ZOOM CONTROL ===== */
   .zoom-control {
     display: flex;
     align-items: center;
     gap: 4px;
-    background: #1a1a2e;
+    background: var(--input-bg);
     border-radius: 6px;
     padding: 2px;
-    border: 1px solid #4a4a6e;
+    border: 1px solid var(--border);
   }
 
   .zoom-control button {
     background: transparent;
     border: none;
-    color: #ccc;
-    width: 28px;
-    height: 28px;
+    color: var(--text-2);
+    width: 28px; height: 28px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
@@ -338,35 +527,26 @@
     justify-content: center;
   }
 
-  .zoom-control button:hover { background: #3a3a5e; }
+  .zoom-control button:hover { background: var(--surface); }
 
   .zoom-control span {
     font-size: 12px;
-    color: #aaa;
+    color: var(--text-2);
     min-width: 40px;
     text-align: center;
   }
 
   /* ===== SCROLLBAR ===== */
   ::-webkit-scrollbar { width: 10px; height: 10px; }
-  ::-webkit-scrollbar-track { background: #1a1a2e; }
-  ::-webkit-scrollbar-thumb { background: #4a4a6e; border-radius: 5px; }
-  ::-webkit-scrollbar-thumb:hover { background: #6a6a9e; }
-
-  /* ===== RESPONSIVE ===== */
-  @media (max-width: 900px) {
-    .toolbar { padding: 10px; gap: 8px; }
-    .input-text { width: 180px; }
-    .device-btn { min-width: 60px; padding: 5px 8px; }
-    .device-btn .name { font-size: 9px; }
-    .ratio-btn { min-width: 50px; padding: 4px 6px; }
-  }
+  ::-webkit-scrollbar-track { background: var(--scroll-track); }
+  ::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 5px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--scroll-thumb-hover); }
 
   /* ===== LOADING ===== */
   .loading-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(255,255,255,0.9);
+    background: var(--overlay);
     display: none;
     align-items: center;
     justify-content: center;
@@ -379,32 +559,31 @@
   .loading-overlay.active { display: flex; }
 
   .spinner {
-    width: 36px;
-    height: 36px;
-    border: 3px solid #e0e0e0;
-    border-top-color: #6366f1;
+    width: 36px; height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .loading-overlay p { color: #666; font-size: 13px; }
+  .loading-overlay p { color: var(--overlay-text); font-size: 13px; }
 
   /* ===== MODE TABS ===== */
   .mode-tabs {
     display: flex;
     gap: 0;
-    background: #1a1a2e;
+    background: var(--input-bg);
     border-radius: 6px;
     padding: 3px;
-    border: 1px solid #4a4a6e;
+    border: 1px solid var(--border);
   }
 
   .mode-tab {
     background: transparent;
     border: none;
-    color: #888;
+    color: var(--text-3);
     padding: 6px 14px;
     border-radius: 4px;
     cursor: pointer;
@@ -413,21 +592,24 @@
     transition: all 0.2s;
   }
 
-  .mode-tab.active { background: #6366f1; color: white; }
-  .mode-tab:hover:not(.active) { color: #ccc; }
+  .mode-tab.active { background: var(--accent); color: #fff; }
+  .mode-tab:hover:not(.active) { color: var(--text); }
+  .mode-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   .panel { display: none; }
   .panel.active { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
   /* ===== DONATION FOOTER ===== */
   .footer-donation {
-    background: #2a2a3e;
-    border-top: 1px solid #3a3a4e;
+    background: var(--bg-2);
+    border-top: 1px solid var(--border);
     padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+    box-shadow: var(--shadow-footer);
+    gap: 14px;
+    flex-wrap: wrap;
   }
 
   .donation-btn {
@@ -454,11 +636,9 @@
   .donation-btn::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
     transition: left 0.6s;
   }
 
@@ -480,9 +660,7 @@
     transition: transform 0.3s;
   }
 
-  .donation-btn:hover .coffee-icon {
-    transform: rotate(-10deg) scale(1.15);
-  }
+  .donation-btn:hover .coffee-icon { transform: rotate(-10deg) scale(1.15); }
 
   .donation-btn .coffee-text {
     display: flex;
@@ -491,11 +669,7 @@
     text-align: left;
   }
 
-  .donation-btn .coffee-text .main {
-    font-size: 15px;
-    font-weight: 800;
-  }
-
+  .donation-btn .coffee-text .main { font-size: 15px; font-weight: 800; }
   .donation-btn .coffee-text .sub {
     font-size: 10px;
     font-weight: 600;
@@ -504,9 +678,38 @@
     letter-spacing: 0.5px;
   }
 
-  .donation-btn .paypal-icon {
-    font-size: 18px;
-    opacity: 0.85;
+  .donation-btn .paypal-icon { font-size: 18px; opacity: 0.85; }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--bg-3);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 200;
+  }
+
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .toolbar { padding: 10px; gap: 8px; }
+    .input-text { width: 180px; }
+    .device-btn { min-width: 60px; padding: 5px 8px; }
+    .device-btn .name { font-size: 9px; }
+    .ratio-btn { min-width: 50px; padding: 4px 6px; }
+    .topbar { padding: 6px 10px; }
   }
 
   @media (max-width: 600px) {
@@ -515,32 +718,50 @@
     .donation-btn .coffee-icon { font-size: 22px; }
     .donation-btn .coffee-text .main { font-size: 13px; }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
 </style>
 </head>
 <body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="topbar">
+  <div class="topbar-brand"><span class="dot"></span>Mobile Preview</div>
+  <select class="select-lang" id="langSelect" aria-label="Language">
+    <option value="ro">🇷🇴 Română</option>
+    <option value="en">🇬🇧 English</option>
+    <option value="sr-Latn">🇷🇸 Srpski</option>
+    <option value="sr-Cyrl">🇷🇸 Српски</option>
+  </select>
+  <button class="icon-btn" id="themeToggle" title="Theme">
+    <span id="themeIcon">🌙</span><span id="themeLabel">Dark</span>
+  </button>
+</div>
 
 <!-- ===== TOOLBAR ===== -->
 <div class="toolbar">
   <div class="toolbar-group">
     <button class="btn primary" onclick="document.getElementById('fileInput').click()">
-      📁 Load file
+      <span data-i18n="loadFile">📁 Load file</span>
     </button>
     <input type="file" id="fileInput" accept=".html,.htm" style="display:none" onchange="loadLocalFile(event)">
   </div>
 
   <div class="toolbar-group">
     <input type="text" class="input-text" id="urlInput" placeholder="https://example.com/page.html" onkeydown="if(event.key==='Enter')loadFromUrl()">
-    <button class="btn" onclick="loadFromUrl()">🌐 Load URL</button>
+    <button class="btn" onclick="loadFromUrl()"><span data-i18n="loadUrl">🌐 Load URL</span></button>
   </div>
 
   <div class="toolbar-group">
-    <label>Orientation:</label>
+    <label data-i18n="orientation">Orientation:</label>
     <button class="orientation-btn active" id="btnPortrait" onclick="setOrientation('portrait')" title="Portrait">📱</button>
     <button class="orientation-btn" id="btnLandscape" onclick="setOrientation('landscape')" title="Landscape">🔄</button>
   </div>
 
   <div class="toolbar-group">
-    <label>Zoom:</label>
+    <label data-i18n="zoom">Zoom:</label>
     <div class="zoom-control">
       <button onclick="changeZoom(-10)">−</button>
       <span id="zoomLabel">100%</span>
@@ -551,16 +772,16 @@
   <div class="toolbar-group">
     <button class="btn" onclick="reloadPreview()" title="Reload">🔄</button>
     <button class="btn" onclick="openInNewTab()" title="New tab">↗</button>
-    <button class="btn" onclick="resetAll()" title="Reset">⟲ Reset</button>
+    <button class="btn" onclick="resetAll()"><span data-i18n="reset">⟲ Reset</span></button>
   </div>
 </div>
 
 <!-- ===== SELECTOR MODE ===== -->
 <div class="toolbar" style="padding: 8px 20px; gap: 16px;">
   <div class="mode-tabs">
-    <button class="mode-tab active" onclick="switchMode('device')">📱 Devices</button>
-    <button class="mode-tab" onclick="switchMode('ratio')">📐 Aspect ratio</button>
-    <button class="mode-tab" onclick="switchMode('custom')">⚙️ Custom</button>
+    <button class="mode-tab active" onclick="switchMode('device')"><span data-i18n="tabDevices">📱 Devices</span></button>
+    <button class="mode-tab" onclick="switchMode('ratio')"><span data-i18n="tabRatio">📐 Aspect ratio</span></button>
+    <button class="mode-tab" onclick="switchMode('custom')"><span data-i18n="tabCustom">⚙️ Custom</span></button>
   </div>
 </div>
 
@@ -574,43 +795,43 @@
 <!-- ===== PANEL: ASPECT RATIOS ===== -->
 <div class="toolbar panel" id="panelRatio" style="padding: 8px 20px;">
   <div class="toolbar-group">
-    <label>Screen format:</label>
+    <label data-i18n="screenFormat">Screen format:</label>
     <div class="ratio-selector" id="ratioSelector"></div>
   </div>
   <div class="toolbar-group">
-    <label>Base width:</label>
+    <label data-i18n="baseWidth">Base width:</label>
     <input type="number" class="input-num" id="ratioBaseWidth" value="390" min="200" max="2000" onchange="applyRatio()">
-    <span style="font-size:12px;color:#888;">px</span>
+    <span style="font-size:12px;color:var(--text-3);">px</span>
   </div>
   <div class="toolbar-group">
-    <label>Display width:</label>
+    <label data-i18n="displayWidth">Display width:</label>
     <input type="range" id="ratioDisplayScale" min="20" max="150" value="100" style="width:120px;" oninput="document.getElementById('ratioScaleLabel').textContent=this.value+'%';applyRatio();">
-    <span id="ratioScaleLabel" style="font-size:12px;color:#818cf8;min-width:40px;">100%</span>
+    <span id="ratioScaleLabel" style="font-size:12px;color:var(--accent-hover);min-width:40px;">100%</span>
   </div>
 </div>
 
 <!-- ===== PANEL: CUSTOM ===== -->
 <div class="toolbar panel" id="panelCustom" style="padding: 8px 20px;">
   <div class="toolbar-group">
-    <label>Width:</label>
+    <label data-i18n="width">Width:</label>
     <input type="number" class="input-num" id="customW" value="390" min="100" max="4000" onchange="applyCustom()">
     <label>×</label>
-    <label>Height:</label>
+    <label data-i18n="height">Height:</label>
     <input type="number" class="input-num" id="customH" value="844" min="100" max="4000" onchange="applyCustom()">
-    <span style="font-size:12px;color:#888;">px</span>
+    <span style="font-size:12px;color:var(--text-3);">px</span>
   </div>
   <div class="toolbar-group">
-    <label>Frame type:</label>
+    <label data-i18n="frameType">Frame type:</label>
     <select id="customFrameType" class="input-num" style="width:120px;" onchange="applyCustom()">
-      <option value="phone">Phone</option>
-      <option value="tablet">Tablet</option>
-      <option value="none">No frame</option>
+      <option value="phone" data-i18n="framePhone">Phone</option>
+      <option value="tablet" data-i18n="frameTablet">Tablet</option>
+      <option value="none" data-i18n="frameNone">No frame</option>
     </select>
   </div>
   <div class="toolbar-group">
-    <label>Scale:</label>
+    <label data-i18n="scale">Scale:</label>
     <input type="range" id="customScale" min="20" max="150" value="100" style="width:120px;" oninput="document.getElementById('customScaleLabel').textContent=this.value+'%';applyCustom();">
-    <span id="customScaleLabel" style="font-size:12px;color:#818cf8;min-width:40px;">100%</span>
+    <span id="customScaleLabel" style="font-size:12px;color:var(--accent-hover);min-width:40px;">100%</span>
   </div>
 </div>
 
@@ -623,29 +844,202 @@
       <div class="screen" id="screen">
         <div class="loading-overlay" id="loadingOverlay">
           <div class="spinner"></div>
-          <p>Loading...</p>
+          <p data-i18n="loading">Loading...</p>
         </div>
         <iframe id="previewFrame" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"></iframe>
       </div>
     </div>
 
-    <div class="empty-state" id="emptyState"></div>
+    <div class="empty-state" id="emptyState">
+      <div class="es-icon">📱</div>
+      <div class="es-title" data-i18n="emptyTitle">Nothing to preview yet</div>
+      <div class="es-text" data-i18n="emptyText">Load an HTML file from your device or paste a URL above — then see how it looks on iPhone, iPad, Android and desktop frames.</div>
+      <div class="es-hint" data-i18n="emptyHint">Tip: press ? in a shared link like example.com/?lang=en — it works too.</div>
+    </div>
   </div>
 </div>
 
 <!-- ===== DONATION FOOTER ===== -->
 <footer class="footer-donation">
-  <a href="https://paypal.me/TekiDeki" target="_blank" rel="noopener noreferrer" class="donation-btn" title="Support the project with a coffee">
+  <a href="https://paypal.me/TekiDeki" target="_blank" rel="noopener noreferrer" class="donation-btn" id="donationBtn">
     <span class="coffee-icon">☕</span>
     <span class="coffee-text">
-      <span class="main">Deserve a coffee?</span>
-      <span class="sub">Support on PayPal</span>
+      <span class="main" data-i18n="donate">Buy me a coffee?</span>
+      <span class="sub" data-i18n="donateSub">Support on PayPal</span>
     </span>
     <span class="paypal-icon">💳</span>
   </a>
 </footer>
 
+<div class="toast" id="toast"></div>
+
 <script>
+/* =====================================================================
+   Mobile Preview — single-file web app
+   Features: 4 languages (RO/EN/SR-Latn/SR-Cyrl), light/dark theme,
+   device/aspect-ratio/custom preview modes, PWA offline, zero tracking.
+   ===================================================================== */
+
+// ===== I18N =====
+const translations = {
+  ro: {
+    title: "Mobile Preview — Testează orice pagină pe iPhone, iPad și Android",
+    description: "Previzualizează orice fișier HTML sau URL în rame reale de iPhone, iPad, Android și desktop. Gratuit, funcționează offline, fără tracking. 12 dispozitive, 13 rapoarte de aspect.",
+    loadFile: "📁 Încarcă fișier",
+    loadUrl: "🌐 Încarcă URL",
+    orientation: "Orientare:",
+    zoom: "Zoom:",
+    reset: "⟲ Resetează",
+    tabDevices: "📱 Dispozitive",
+    tabRatio: "📐 Raport de aspect",
+    tabCustom: "⚙️ Personalizat",
+    screenFormat: "Format ecran:",
+    baseWidth: "Lățime de bază:",
+    displayWidth: "Lățime afișare:",
+    width: "Lățime:",
+    height: "Înălțime:",
+    frameType: "Tip ramă:",
+    framePhone: "Telefon",
+    frameTablet: "Tabletă",
+    frameNone: "Fără ramă",
+    scale: "Scală:",
+    loading: "Se încarcă...",
+    emptyTitle: "Nimic de previzualizat încă",
+    emptyText: "Încarcă un fișier HTML de pe dispozitiv sau lipește un URL mai sus — apoi vezi cum arată pe rame de iPhone, iPad, Android și desktop.",
+    emptyHint: "Sfat: încearcă ? și parametrul ?lang=ro într-un link partajat — funcționează.",
+    donate: "Merit o cafeluță?",
+    donateSub: "Susține pe PayPal",
+    theme: "Temă",
+    themeDark: "Întunecat",
+    themeLight: "Luminos",
+    themeAuto: "Auto",
+    toastLang: "Limbă schimbată",
+    toastTheme: "Temă schimbată",
+    toastInvalidUrl: "Introdu un URL valid.",
+    toastNoContent: "Nimic de deschis.",
+    device: "Dispozitiv",
+    ratio: "Raport",
+    custom: "Personalizat"
+  },
+  en: {
+    title: "Mobile Preview — Test any page on iPhone, iPad & Android",
+    description: "Preview any HTML file or URL in real iPhone, iPad, Android and desktop frames. Free, offline-ready, no tracking. 12 devices, 13 aspect ratios.",
+    loadFile: "📁 Load file",
+    loadUrl: "🌐 Load URL",
+    orientation: "Orientation:",
+    zoom: "Zoom:",
+    reset: "⟲ Reset",
+    tabDevices: "📱 Devices",
+    tabRatio: "📐 Aspect ratio",
+    tabCustom: "⚙️ Custom",
+    screenFormat: "Screen format:",
+    baseWidth: "Base width:",
+    displayWidth: "Display width:",
+    width: "Width:",
+    height: "Height:",
+    frameType: "Frame type:",
+    framePhone: "Phone",
+    frameTablet: "Tablet",
+    frameNone: "No frame",
+    scale: "Scale:",
+    loading: "Loading...",
+    emptyTitle: "Nothing to preview yet",
+    emptyText: "Load an HTML file from your device or paste a URL above — then see how it looks on iPhone, iPad, Android and desktop frames.",
+    emptyHint: "Tip: sharing links with ?lang=en work too.",
+    donate: "Buy me a coffee?",
+    donateSub: "Support on PayPal",
+    theme: "Theme",
+    themeDark: "Dark",
+    themeLight: "Light",
+    themeAuto: "Auto",
+    toastLang: "Language changed",
+    toastTheme: "Theme changed",
+    toastInvalidUrl: "Enter a valid URL.",
+    toastNoContent: "Nothing to open.",
+    device: "Device",
+    ratio: "Ratio",
+    custom: "Custom"
+  },
+  "sr-Latn": {
+    title: "Mobile Preview — Testirajte bilo koju stranicu na iPhone-u, iPad-u i Androidu",
+    description: "Pregledajte bilo koji HTML fajl ili URL u pravim okvirima iPhone, iPad, Android i desktop uređaja. Besplatno, radi offline, bez praćenja. 12 uređaja, 13 odnosa stranica.",
+    loadFile: "📁 Učitaj fajl",
+    loadUrl: "🌐 Učitaj URL",
+    orientation: "Orijentacija:",
+    zoom: "Zum:",
+    reset: "⟲ Resetuj",
+    tabDevices: "📱 Uređaji",
+    tabRatio: "📐 Odnos stranica",
+    tabCustom: "⚙️ Prilagođeno",
+    screenFormat: "Format ekrana:",
+    baseWidth: "Osnovna širina:",
+    displayWidth: "Širina prikaza:",
+    width: "Širina:",
+    height: "Visina:",
+    frameType: "Tip okvira:",
+    framePhone: "Telefon",
+    frameTablet: "Tablet",
+    frameNone: "Bez okvira",
+    scale: "Razmera:",
+    loading: "Učitavanje...",
+    emptyTitle: "Još nema sadržaja za pregled",
+    emptyText: "Učitajte HTML fajl sa uređaja ili nalepite URL iznad — zatim pogledajte kako izgleda na iPhone, iPad, Android i desktop okvirima.",
+    emptyHint: "Savet: linkovi sa ?lang=sr-Latn takođe rade.",
+    donate: "Časti me kafom?",
+    donateSub: "Podrži na PayPal-u",
+    theme: "Tema",
+    themeDark: "Tamna",
+    themeLight: "Svetla",
+    themeAuto: "Auto",
+    toastLang: "Jezik promenjen",
+    toastTheme: "Tema promenjena",
+    toastInvalidUrl: "Unesite ispravan URL.",
+    toastNoContent: "Nema sadržaja za otvaranje.",
+    device: "Uređaj",
+    ratio: "Odnos",
+    custom: "Prilagođeno"
+  },
+  "sr-Cyrl": {
+    title: "Mobile Preview — Тестирајте било коју страницу на iPhone-у, iPad-у и Android-у",
+    description: "Прегледајте било који HTML фајл или URL у правим оквирима iPhone, iPad, Android и десктоп уређаја. Бесплатно, ради офлајн, без праћења. 12 уређаја, 13 односа страница.",
+    loadFile: "📁 Учитај фајл",
+    loadUrl: "🌐 Учитај URL",
+    orientation: "Оријентација:",
+    zoom: "Зум:",
+    reset: "⟲ Ресетуј",
+    tabDevices: "📱 Уређаји",
+    tabRatio: "📐 Однос страница",
+    tabCustom: "⚙️ Прилагођено",
+    screenFormat: "Формат екрана:",
+    baseWidth: "Основна ширина:",
+    displayWidth: "Ширина приказа:",
+    width: "Ширина:",
+    height: "Висина:",
+    frameType: "Тип оквира:",
+    framePhone: "Телефон",
+    frameTablet: "Таблет",
+    frameNone: "Без оквира",
+    scale: "Размера:",
+    loading: "Учитавање...",
+    emptyTitle: "Још нема садржаја за преглед",
+    emptyText: "Учитајте HTML фајл са уређаја или налепите URL изнад — затим погледајте како изгледа на iPhone, iPad, Android и десктоп оквирима.",
+    emptyHint: "Савет: линкови са ?lang=sr-Cyrl такође раде.",
+    donate: "Части ме кафом?",
+    donateSub: "Подржи на PayPal-у",
+    theme: "Тема",
+    themeDark: "Тамна",
+    themeLight: "Светла",
+    themeAuto: "Ауто",
+    toastLang: "Језик промењен",
+    toastTheme: "Тема промењена",
+    toastInvalidUrl: "Унесите исправан URL.",
+    toastNoContent: "Нема садржаја за отварање.",
+    device: "Уређај",
+    ratio: "Однос",
+    custom: "Прилагођено"
+  }
+};
+
 // ===== DEVICE PRESETS =====
 const devices = [
   { id: 'iphone-se',    name: 'iPhone SE',    width: 375,  height: 667,  type: 'phone', icon: '📱' },
@@ -664,22 +1058,24 @@ const devices = [
 
 // ===== ASPECT RATIOS =====
 const aspectRatios = [
-  { id: '1-1',      label: '1:1',      w: 1,  h: 1,  desc: 'Square, Instagram post' },
-  { id: '4-3',      label: '4:3',      w: 4,  h: 3,  desc: 'iPad, old devices' },
-  { id: '3-2',      label: '3:2',      w: 3,  h: 2,  desc: 'iPhone 4s, old Android' },
-  { id: '16-10',    label: '16:10',    w: 16, h: 10, desc: 'Android tablets, 8:5' },
-  { id: '5-3',      label: '5:3',      w: 5,  h: 3,  desc: 'Windows Phone (Lumia)' },
-  { id: '16-9',     label: '16:9',     w: 16, h: 9,  desc: 'Classic mainstream Android' },
-  { id: '18-9',     label: '18:9',     w: 18, h: 9,  desc: 'Galaxy S8, LG G6' },
-  { id: '18.5-9',   label: '18.5:9',   w: 18.5, h: 9, desc: 'Galaxy S8/S9 Infinity' },
-  { id: '19-9',     label: '19:9',     w: 19, h: 9,  desc: 'Galaxy S10e, Nokia X6' },
-  { id: '19.5-9',   label: '19.5:9',   w: 19.5, h: 9, desc: 'Modern iPhone, LG G7' },
-  { id: '20-9',     label: '20:9',     w: 20, h: 9,  desc: 'Galaxy S10 Lite, S20' },
-  { id: '21-9',     label: '21:9',     w: 21, h: 9,  desc: 'Sony Xperia, ultra-wide' },
-  { id: '9-16',     label: '9:16',     w: 9,  h: 16, desc: 'Vertical portrait, Stories/Reels/TikTok' },
+  { id: '1-1',      label: '1:1',      w: 1,  h: 1 },
+  { id: '4-3',      label: '4:3',      w: 4,  h: 3 },
+  { id: '3-2',      label: '3:2',      w: 3,  h: 2 },
+  { id: '16-10',    label: '16:10',    w: 16, h: 10 },
+  { id: '5-3',      label: '5:3',      w: 5,  h: 3 },
+  { id: '16-9',     label: '16:9',     w: 16, h: 9 },
+  { id: '18-9',     label: '18:9',     w: 18, h: 9 },
+  { id: '18.5-9',   label: '18.5:9',   w: 18.5, h: 9 },
+  { id: '19-9',     label: '19:9',     w: 19, h: 9 },
+  { id: '19.5-9',   label: '19.5:9',   w: 19.5, h: 9 },
+  { id: '20-9',     label: '20:9',     w: 20, h: 9 },
+  { id: '21-9',     label: '21:9',     w: 21, h: 9 },
+  { id: '9-16',     label: '9:16',     w: 9,  h: 16 },
 ];
 
 // ===== STATE =====
+let currentLang = 'ro';
+let currentTheme = 'dark';
 let currentDevice = devices[1];
 let currentRatio = null;
 let mode = 'device';
@@ -690,11 +1086,109 @@ let currentBlobUrl = null;
 let currentHtmlContent = null;
 let isLocalFile = false;
 
+const LS_LANG = 'mp-lang';
+const LS_THEME = 'mp-theme';
+
+// ===== UTIL =====
+function t(key) {
+  const dict = translations[currentLang] || translations.en;
+  return dict[key] !== undefined ? dict[key] : (translations.en[key] || key);
+}
+
+let toastTimer = null;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// ===== I18N APPLY =====
+function applyLanguage(lang) {
+  if (!translations[lang]) lang = 'en';
+  currentLang = lang;
+  localStorage.setItem(LS_LANG, lang);
+
+  document.documentElement.lang = lang === 'sr-Cyrl' ? 'sr-Cyrl' : (lang === 'sr-Latn' ? 'sr-Latn' : lang);
+  document.title = t('title');
+
+  const md = document.querySelector('meta[name="description"]');
+  if (md) md.setAttribute('content', t('description'));
+
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
+    const key = el.getAttribute('data-i18n');
+    const val = t(key);
+    if (val) el.textContent = val;
+  });
+
+  // theme button label
+  updateThemeLabel();
+}
+
+function updateThemeLabel() {
+  const icon = document.getElementById('themeIcon');
+  const label = document.getElementById('themeLabel');
+  if (currentTheme === 'dark') { icon.textContent = '☀️'; label.textContent = t('themeLight'); }
+  else { icon.textContent = '🌙'; label.textContent = t('themeDark'); }
+}
+
+// ===== THEME =====
+function applyTheme(theme, silent) {
+  currentTheme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem(LS_THEME, theme);
+  const mt = document.querySelector('meta[name="theme-color"]');
+  if (mt) mt.setAttribute('content', theme === 'dark' ? '#0e1526' : '#f4f6fb');
+  updateThemeLabel();
+  if (!silent) toast(t('toastTheme'));
+}
+
+function initTheme() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlTheme = urlParams.get('theme');
+  if (urlTheme === 'light' || urlTheme === 'dark') { applyTheme(urlTheme, true); return; }
+  const saved = localStorage.getItem(LS_THEME);
+  if (saved === 'light' || saved === 'dark') { applyTheme(saved, true); return; }
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(prefersDark ? 'dark' : 'light', true);
+}
+
+// ===== URL PARAMS (language) =====
+function initLanguage() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlLang = urlParams.get('lang');
+  const lang = (urlLang && translations[urlLang])
+    ? urlLang
+    : (localStorage.getItem(LS_LANG) || (navigator.language && navigator.language.startsWith('en') ? 'en' : 'ro'));
+  applyLanguage(lang);
+  document.getElementById('langSelect').value = lang;
+}
+
 // ===== INIT =====
 function init() {
+  initTheme();
+  initLanguage();
   renderDeviceButtons();
   renderRatioButtons();
   selectDevice(currentDevice.id);
+
+  document.getElementById('langSelect').addEventListener('change', (e) => {
+    applyLanguage(e.target.value);
+    toast(t('toastLang'));
+    renderRatioButtonsStaticLabels();
+  });
+
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+  });
+
+  // respect live OS theme change when user hasn't chosen manually
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (!localStorage.getItem(LS_THEME)) applyTheme(e.matches ? 'dark' : 'light', true);
+    });
+  }
 }
 
 function renderDeviceButtons() {
@@ -713,15 +1207,10 @@ function renderRatioButtons() {
   container.innerHTML = aspectRatios.map(r => {
     const maxDim = 24;
     let boxW, boxH;
-    if (r.w >= r.h) {
-      boxW = maxDim;
-      boxH = Math.round(maxDim * (r.h / r.w));
-    } else {
-      boxH = maxDim;
-      boxW = Math.round(maxDim * (r.w / r.h));
-    }
+    if (r.w >= r.h) { boxW = maxDim; boxH = Math.round(maxDim * (r.h / r.w)); }
+    else { boxH = maxDim; boxW = Math.round(maxDim * (r.w / r.h)); }
     return `
-      <button class="ratio-btn" data-id="${r.id}" onclick="selectRatio('${r.id}')" title="${r.desc}">
+      <button class="ratio-btn" data-id="${r.id}" onclick="selectRatio('${r.id}')">
         <div class="ratio-preview">
           <div class="ratio-box" style="width:${boxW}px;height:${boxH}px;"></div>
         </div>
@@ -731,12 +1220,14 @@ function renderRatioButtons() {
   }).join('');
 }
 
+function renderRatioButtonsStaticLabels() { /* ratio labels are numeric — no translation needed */ }
+
 // ===== MODE SWITCH =====
 function switchMode(newMode) {
   mode = newMode;
   const modes = ['device', 'ratio', 'custom'];
-  document.querySelectorAll('.mode-tab').forEach((t, i) => {
-    t.classList.toggle('active', modes[i] === newMode);
+  document.querySelectorAll('.mode-tab').forEach((tb, i) => {
+    tb.classList.toggle('active', modes[i] === newMode);
   });
   document.getElementById('panelDevice').classList.toggle('active', newMode === 'device');
   document.getElementById('panelRatio').classList.toggle('active', newMode === 'ratio');
@@ -794,7 +1285,7 @@ function applyDevice() {
   let w = currentDevice.width;
   let h = currentDevice.height;
   if (orientation === 'landscape') [w, h] = [h, w];
-  renderFrame(w, h, currentDevice.type, zoom / 100, currentDevice.name);
+  renderFrame(w, h, currentDevice.type, zoom / 100);
 }
 
 // ===== APPLY RATIO =====
@@ -816,8 +1307,7 @@ function applyRatio() {
     if (h > w) { w = Math.round(baseWidth * ratioVal); h = baseWidth; }
   }
 
-  const ratioLabel = `${currentRatio.label} (${currentRatio.desc})`;
-  renderFrame(w, h, 'phone', displayScale, ratioLabel);
+  renderFrame(w, h, 'phone', displayScale);
 }
 
 // ===== APPLY CUSTOM =====
@@ -830,16 +1320,15 @@ function applyCustom() {
   let ww = w, hh = h;
   if (orientation === 'landscape') [ww, hh] = [h, w];
 
-  renderFrame(ww, hh, frameType, scale, `Custom ${ww}×${hh}`);
+  renderFrame(ww, hh, frameType, scale);
 }
 
 // ===== RENDER FRAME =====
-function renderFrame(w, h, frameType, scale, label) {
+function renderFrame(w, h, frameType, scale) {
   const frame = document.getElementById('deviceFrame');
   const screen = document.getElementById('screen');
 
   const previewArea = document.getElementById('previewArea');
-  // Using available width/height of the preview area
   const availW = previewArea.clientWidth - 80;
   const availH = previewArea.clientHeight - 80;
 
@@ -860,10 +1349,10 @@ function renderFrame(w, h, frameType, scale, label) {
     frame.style.boxShadow = 'none';
   } else {
     frame.className = 'device-frame ' + frameType;
-    frame.style.background = '#000';
+    frame.style.background = 'var(--frame-bg)';
     frame.style.borderRadius = frameType === 'phone' ? '40px' : '24px';
     frame.style.padding = frameType === 'phone' ? '12px' : '16px';
-    frame.style.boxShadow = '0 0 0 2px #333, 0 0 0 4px #1a1a1a, 0 20px 60px rgba(0,0,0,0.6), 0 0 80px rgba(99, 102, 241, 0.15)';
+    frame.style.boxShadow = '0 0 0 2px var(--frame-ring-1), 0 0 0 4px var(--frame-ring-2), 0 20px 60px var(--frame-shadow), 0 0 80px var(--accent-glow)';
   }
 
   frame.style.transform = `scale(${scale})`;
@@ -891,7 +1380,7 @@ function loadLocalFile(event) {
 // ===== LOAD FROM URL =====
 function loadFromUrl() {
   const url = document.getElementById('urlInput').value.trim();
-  if (!url) { alert('Enter a valid URL.'); return; }
+  if (!url) { toast(t('toastInvalidUrl')); return; }
   let finalUrl = url;
   if (!/^https?:\/\//i.test(url)) finalUrl = 'https://' + url;
   currentUrl = finalUrl;
@@ -936,10 +1425,7 @@ function reloadPreview() {
 
 function openInNewTab() {
   const iframe = document.getElementById('previewFrame');
-  if (!iframe.src || iframe.src === 'about:blank') {
-    alert('No content to open.');
-    return;
-  }
+  if (!iframe.src || iframe.src === 'about:blank') { toast(t('toastNoContent')); return; }
   window.open(iframe.src, '_blank');
 }
 
@@ -960,6 +1446,13 @@ function resetAll() {
 window.addEventListener('resize', () => {
   if (document.getElementById('deviceFrame').style.display !== 'none') reapply();
 });
+
+// ===== PWA: service worker =====
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
 
 init();
 </script>
