@@ -1,8 +1,9 @@
 // Mobile Preview — service worker (cache-first shell, network-first for URLs)
-const CACHE_NAME = 'mobile-preview-v2';
+const CACHE_NAME = 'mobile-preview-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
+  './LICENSE',
   './manifest.json',
   './favicon.ico',
   './icon-maskable-512.png',
@@ -24,13 +25,18 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+      Promise.all(keys.filter((k) => k.startsWith('mobile-preview-v') && k !== CACHE_NAME).map((k) => caches.delete(k)))
     ).then(() => self.clients.claim())
   );
 });
 
 // fetch: only handle same-origin requests (app shell). Preview URLs go straight to network.
 self.addEventListener('fetch', (event) => {
+  const licenseUrl = new URL('./LICENSE', self.registration.scope).href;
+  if (event.request.method === 'GET' && event.request.url === licenseUrl) {
+    event.respondWith(caches.open(CACHE_NAME).then(cache => cache.match(event.request)).then(cached => cached || fetch(event.request)));
+    return;
+  }
   const req = event.request;
   if (req.method !== 'GET') return;
 
