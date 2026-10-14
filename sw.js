@@ -1,5 +1,5 @@
 // Mobile Preview — service worker (cache-first shell, network-first for URLs)
-const CACHE_NAME = 'mobile-preview-v3';
+const CACHE_NAME = 'mobile-preview-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
