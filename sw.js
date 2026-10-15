@@ -1,5 +1,5 @@
 // Mobile Preview - service worker (cache-first shell, network-first for URLs)
-const CACHE_NAME = 'mobile-preview-v5';
+const CACHE_NAME = 'mobile-preview-v6';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -9,7 +9,10 @@ const ASSETS_TO_CACHE = [
   './icon-maskable-512.png',
   './icon-192.png',
   './icon-512.png',
-  './apple-touch-icon.png'
+  './apple-touch-icon.png',
+  './og-image.png',
+  './screenshot-narrow.png',
+  './screenshot-wide.png'
 ];
 
 // install: pre-cache app shell
@@ -21,12 +24,18 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// activate: drop old caches
+// activate: drop old caches and tell open pages that a new version is ready
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k.startsWith('mobile-preview-v') && k !== CACHE_NAME).map((k) => caches.delete(k)))
-    ).then(() => self.clients.claim())
+    caches.keys().then((keys) => {
+      const oldCaches = keys.filter((k) => k.startsWith('mobile-preview-v') && k !== CACHE_NAME);
+      return Promise.all(oldCaches.map((k) => caches.delete(k))).then(() => {
+        if (oldCaches.length === 0) return undefined;
+        return self.clients.matchAll({ type: 'window' }).then((clients) => {
+          clients.forEach((client) => client.postMessage({ type: 'SW_UPDATED', cache: CACHE_NAME }));
+        });
+      });
+    }).then(() => self.clients.claim())
   );
 });
 

@@ -1,7 +1,7 @@
 {
   "name": "Mobile Preview - Mobile & Tablet Simulator",
   "short_name": "Mobile Preview",
-  "description": "Preview any HTML page or URL in real iPhone, iPad, Android and desktop frames. Free, offline-ready, no tracking.",
+  "description": "Preview any HTML page or URL in real iPhone, iPad, Android and desktop frames. 12 devices, 13 aspect ratios, custom sizes, four languages. Free, offline-ready, no tracking.",
   "id": "/Mobile-Preview/",
   "start_url": "./index.html",
   "scope": "./",
@@ -34,6 +34,76 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshot-narrow.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Mobile Preview on a phone: an HTML file shown in an iPhone 12 frame, dark theme, Romanian"
+    },
+    {
+      "src": "screenshot-wide.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Mobile Preview on a desktop: 16:9 frame in landscape, light theme, English"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Preview a URL",
+      "short_name": "URL",
+      "description": "Open the URL box and load a page in device frames",
+      "url": "./index.html?focus=url",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Device presets",
+      "short_name": "Devices",
+      "description": "Choose from 12 real device sizes",
+      "url": "./index.html?mode=device",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Aspect ratios",
+      "short_name": "Ratios",
+      "description": "Frame by aspect ratio, e.g. 16:9 or 9:16",
+      "url": "./index.html?mode=ratio",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Custom size",
+      "short_name": "Custom",
+      "description": "Any width and height up to 4000 px",
+      "url": "./index.html?mode=custom",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }

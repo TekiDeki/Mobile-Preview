@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
 <title data-i18n="title">Mobile Preview - Test any page on iPhone, iPad & Android</title>
 <meta name="description" data-i18n-meta="description" content="Preview any HTML file or URL in real iPhone, iPad, Android and desktop frames. Free, offline-ready, no tracking. 12 devices, 13 aspect ratios, custom sizes.">
 <meta name="keywords" content="mobile preview, responsive tester, device simulator, iphone preview, ipad preview, android preview, mobile emulator, responsive design tool, previzualizare mobilă, simulator mobil, testare responsive, pregled na mobilnom, simulator telefona, мобилни преглед, симулатор телефона">
@@ -10,6 +11,25 @@
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#3b82f6">
 <link rel="canonical" href="https://tekideki.github.io/Mobile-Preview/">
+
+<!-- Applied before the first paint: theme from ?theme=, saved choice or system. -->
+<script>
+(function () {
+  try {
+    var root = document.documentElement;
+    function read(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+    var params = new URLSearchParams(location.search);
+    var urlTheme = params.get('theme');
+    var theme = (urlTheme === 'light' || urlTheme === 'dark') ? urlTheme : read('mp-theme');
+    if (theme !== 'light' && theme !== 'dark') {
+      theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    }
+    root.setAttribute('data-theme', theme);
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#0e1526' : '#f4f6fb');
+  } catch (e) {}
+})();
+</script>
 
 <!-- hreflang: 4 languages -->
 <link rel="alternate" hreflang="ro" href="https://tekideki.github.io/Mobile-Preview/">
@@ -29,12 +49,14 @@
 <meta property="og:image" content="https://tekideki.github.io/Mobile-Preview/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Mobile Preview - load any HTML file or URL and see it inside iPhone, iPad, Android and desktop frames">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Mobile Preview - Test any page on iPhone, iPad & Android">
 <meta name="twitter:description" content="Preview any HTML file or URL in real device frames. Free, offline, no tracking.">
 <meta name="twitter:image" content="https://tekideki.github.io/Mobile-Preview/og-image.png">
+<meta name="twitter:image:alt" content="Mobile Preview - device frames for any web page">
 
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
@@ -55,8 +77,18 @@
   "alternateName": "Mobile & Tablet Preview",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
+  "softwareVersion": "2.0",
   "author": { "@type": "Person", "name": "TekiDeki", "url": "https://github.com/TekiDeki" },
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": [
+    "12 device presets with real viewport sizes",
+    "13 aspect ratios incl. 9:16 stories",
+    "Custom width and height with phone, tablet or frameless rendering",
+    "Local HTML file and remote URL preview in a sandboxed frame",
+    "Portrait and landscape orientation",
+    "Four interface languages and dark or light theme",
+    "Offline PWA with install support"
+  ],
   "inLanguage": ["ro", "en", "sr-Latn", "sr-Cyrl"],
   "description": "Preview any HTML file or URL in real iPhone, iPad, Android and desktop frames. Free, offline-ready, no tracking.",
   "url": "https://tekideki.github.io/Mobile-Preview/",
@@ -79,10 +111,12 @@
     --text-2: #9aa7bf;
     --text-3: #6b7893;
     --accent: #3b82f6;
+    --accent-ink: #2563eb;
     --accent-hover: #60a5fa;
     --accent-soft: rgba(59, 130, 246, 0.35);
     --accent-glow: rgba(59, 130, 246, 0.16);
     --accent-2: #ec4899;
+    --accent-ink-2: #be185d;
     --accent-2-soft: rgba(236, 72, 153, 0.45);
     --input-bg: #0b1120;
     --frame-bg: #000;
@@ -113,10 +147,12 @@
     --text-2: #55648a;
     --text-3: #8391ad;
     --accent: #2563eb;
+    --accent-ink: #1d4ed8;
     --accent-hover: #1d4ed8;
     --accent-soft: rgba(37, 99, 235, 0.28);
     --accent-glow: rgba(37, 99, 235, 0.14);
     --accent-2: #db2777;
+    --accent-ink-2: #be185d;
     --accent-2-soft: rgba(219, 39, 119, 0.35);
     --input-bg: #ffffff;
     --frame-bg: #111827;
@@ -162,6 +198,7 @@
   .topbar .spacer { margin-right: auto; }
 
   .topbar-brand {
+    margin: 0;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -194,7 +231,8 @@
   }
 
   .icon-btn:hover { background: var(--surface-hover); border-color: var(--border-hover); }
-  .icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .icon-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .tools-toggle { display: none; }
 
   .select-lang {
     background: var(--surface);
@@ -210,6 +248,21 @@
   .select-lang:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   /* ===== TOOLBAR ===== */
+  .update-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 10px 20px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .update-bar[hidden] { display: none; }
+
   .toolbar {
     background: var(--bg-2);
     padding: 12px 20px;
@@ -227,6 +280,9 @@
     gap: 8px;
     align-items: center;
   }
+
+  /* Keep the desktop layout written by hand from wrapping into a broken grid. */
+  .toolbar-inner { display: contents; }
 
   .toolbar label {
     font-size: 13px;
@@ -263,7 +319,7 @@
   }
 
   .btn.primary {
-    background: var(--accent);
+    background: var(--accent-ink);
     border-color: var(--accent-hover);
     color: #fff;
   }
@@ -326,11 +382,11 @@
 
   .device-btn:hover { background: var(--surface-hover); }
   .device-btn.active {
-    background: var(--accent);
+    background: var(--accent-ink);
     border-color: var(--accent-hover);
     color: #fff;
   }
-  .device-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .device-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
   .device-btn .icon { font-size: 16px; }
   .device-btn .name { font-size: 10px; margin-top: 2px; }
@@ -357,12 +413,12 @@
 
   .ratio-btn:hover { background: var(--surface-hover); }
   .ratio-btn.active {
-    background: var(--accent-2);
+    background: var(--accent-ink-2);
     border-color: var(--accent-2);
     color: #fff;
     box-shadow: 0 0 12px var(--accent-2-soft);
   }
-  .ratio-btn:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+  .ratio-btn:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 2px; }
 
   .ratio-btn .ratio-preview {
     width: 24px; height: 24px;
@@ -396,13 +452,20 @@
   }
 
   .orientation-btn.active {
-    background: var(--accent);
+    background: var(--accent-ink);
     border-color: var(--accent-hover);
     color: #fff;
   }
-  .orientation-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .orientation-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
   /* ===== PREVIEW AREA ===== */
+  main {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
   .preview-area {
     flex: 1;
     display: flex;
@@ -502,7 +565,8 @@
   .empty-state .es-icon { font-size: 54px; opacity: 0.9; }
   .empty-state .es-title { font-size: 20px; font-weight: 700; color: var(--text); }
   .empty-state .es-text { font-size: 14px; max-width: 460px; line-height: 1.6; }
-  .empty-state .es-hint { font-size: 12px; color: var(--text-3); margin-top: 6px; }
+  .empty-state .es-hint { font-size: 12px; color: var(--text-2); margin-top: 6px; }
+  .empty-state .es-note { font-size: 12px; color: var(--text-2); max-width: 520px; line-height: 1.55; }
 
   /* ===== ZOOM CONTROL ===== */
   .zoom-control {
@@ -584,7 +648,7 @@
   .mode-tab {
     background: transparent;
     border: none;
-    color: var(--text-3);
+    color: var(--text-2);
     padding: 6px 14px;
     border-radius: 4px;
     cursor: pointer;
@@ -593,12 +657,59 @@
     transition: all 0.2s;
   }
 
-  .mode-tab.active { background: var(--accent); color: #fff; }
+  .mode-tab.active { background: var(--accent-ink); color: #fff; }
   .mode-tab:hover:not(.active) { color: var(--text); }
-  .mode-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .mode-tab:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
   .panel { display: none; }
   .panel.active { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .panel[hidden] { display: none; }
+
+  .drop-hint {
+    position: absolute;
+    inset: 12px;
+    border: 2px dashed var(--accent);
+    border-radius: 12px;
+    background: rgba(59, 130, 246, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    pointer-events: none;
+    z-index: 5;
+  }
+  .drop-hint[hidden] { display: none; }
+
+  .unsaved-note {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    font-size: 11px;
+    font-weight: 600;
+    max-width: calc(100% - 24px);
+    text-align: center;
+    z-index: 4;
+  }
+  .unsaved-note[hidden] { display: none; }
+
+  .noscript-note {
+    margin: 0;
+    padding: 14px 20px;
+    background: var(--bg-2);
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    text-align: center;
+  }
 
   /* ===== DONATION FOOTER ===== */
   .footer-donation {
@@ -711,7 +822,34 @@
     .device-btn .name { font-size: 9px; }
     .ratio-btn { min-width: 50px; padding: 4px 6px; }
     .topbar { padding: 6px 10px; }
+    .topbar-brand { font-size: 15px; }
+    .topbar-brand .dot { width: 8px; height: 8px; }
   }
+
+  /* Phones and other narrow screens: the tools start collapsed so the frame
+     gets the room; one tap on Tools brings them back. */
+  @media (max-width: 720px) {
+    .topbar { flex-wrap: wrap; justify-content: space-between; row-gap: 6px; }
+    .select-lang { order: 3; }
+    .tools-toggle { order: 2; }
+    .preview-area { padding: 16px 8px; }
+    .empty-state { padding: 24px 12px; gap: 10px; }
+    .empty-state .es-title { font-size: 17px; }
+    .empty-state .es-text, .empty-state .es-note { font-size: 12.5px; }
+    .device-frame { max-width: calc(100vw - 16px); }
+    .mode-tab { padding: 6px 10px; font-size: 11.5px; }
+    .device-btn .size { font-size: 9px; }
+    /* the tools button only exists on narrow screens */
+    .tools-toggle { display: inline-flex; }
+    /* long empty-state copy must wrap inside the viewport instead of being
+       clipped by the centred flex wrapper */
+    .preview-inner { width: 100%; }
+    .empty-state { width: 100%; padding: 20px 4px; }
+    .empty-state .es-text,
+    .empty-state .es-note { max-width: 100%; }
+  }
+
+  #toolsPanel[hidden] { display: none; }
 
   @media (max-width: 600px) {
     .donation-btn { padding: 12px 18px; }
@@ -758,117 +896,135 @@
 </head>
 <body>
 
+<noscript><p class="noscript-note">Mobile Preview renders device frames with JavaScript. Please enable it. / Mobile Preview afiseaza ramele de dispozitiv cu JavaScript. Te rugam activeaza-l.</p></noscript>
+
 <!-- ===== TOP BAR ===== -->
-<div class="topbar">
-  <div class="topbar-brand"><span class="dot"></span>Mobile Preview</div>
-  <select class="select-lang" id="langSelect" aria-label="Language">
+<header class="topbar">
+  <h1 class="topbar-brand"><span class="dot" aria-hidden="true"></span>Mobile Preview</h1>
+  <button class="icon-btn tools-toggle" id="toolsToggle" type="button" aria-expanded="true" aria-controls="toolsPanel" title="Show or hide the tools" data-i18n-title="toolsToggleLabel" aria-label="Show or hide the tools" data-i18n-aria="toolsToggleLabel"><span aria-hidden="true">🧰</span><span data-i18n="tools">Tools</span></button>
+  <select class="select-lang" id="langSelect" aria-label="Language" data-i18n-aria="langLabel">
     <option value="ro">🇷🇴 Română</option>
     <option value="en">🇬🇧 English</option>
     <option value="sr-Latn">🇷🇸 Srpski</option>
     <option value="sr-Cyrl">🇷🇸 Српски</option>
   </select>
-  <button class="icon-btn" id="themeToggle" title="Theme">
-    <span id="themeIcon">🌙</span><span id="themeLabel">Dark</span>
+  <button class="icon-btn" id="themeToggle" type="button" title="Toggle theme" data-i18n-title="themeToggleLabel" aria-label="Toggle theme" data-i18n-aria="themeToggleLabel">
+    <span id="themeIcon" aria-hidden="true">🌙</span><span id="themeLabel">Dark</span>
   </button>
+</header>
+
+<main id="main">
+<div id="toolsPanel">
+<div class="update-bar" id="updateBar" role="status" hidden>
+  <span data-i18n="updateReady">A new version is available.</span>
+  <button type="button" id="btnUpdateReload" class="btn primary" data-i18n="updateReload">Reload</button>
 </div>
 
 <!-- ===== TOOLBAR ===== -->
 <div class="toolbar">
   <div class="toolbar-group">
-    <button class="btn primary" onclick="document.getElementById('fileInput').click()">
+    <button class="btn primary" id="btnLoadFile" type="button">
       <span data-i18n="loadFile">📁 Load file</span>
     </button>
-    <input type="file" id="fileInput" accept=".html,.htm" style="display:none" onchange="loadLocalFile(event)">
+    <input type="file" id="fileInput" accept=".html,.htm,text/html" style="display:none"
+           aria-label="Open a local HTML file" data-i18n-aria="fileInputLabel">
   </div>
 
   <div class="toolbar-group">
-    <input type="text" class="input-text" id="urlInput" placeholder="https://example.com/page.html" onkeydown="if(event.key==='Enter')loadFromUrl()">
-    <button class="btn" onclick="loadFromUrl()"><span data-i18n="loadUrl">🌐 Load URL</span></button>
+    <input type="text" class="input-text" id="urlInput" placeholder="https://example.com/page.html"
+           inputmode="url" autocomplete="url" spellcheck="false"
+           aria-label="URL to preview" data-i18n-aria="urlInputLabel">
+    <button class="btn" id="btnLoadUrl" type="button"><span data-i18n="loadUrl">🌐 Load URL</span></button>
   </div>
 
-  <div class="toolbar-group">
-    <label data-i18n="orientation">Orientation:</label>
-    <button class="orientation-btn active" id="btnPortrait" onclick="setOrientation('portrait')" title="Portrait">📱</button>
-    <button class="orientation-btn" id="btnLandscape" onclick="setOrientation('landscape')" title="Landscape">🔄</button>
+  <div class="toolbar-group" role="group" aria-labelledby="orientationLabel">
+    <label id="orientationLabel" data-i18n="orientation">Orientation:</label>
+    <button class="orientation-btn active" id="btnPortrait" type="button" aria-pressed="true"
+            title="Portrait" data-i18n-title="orientationPortrait" aria-label="Portrait" data-i18n-aria="orientationPortrait">📱</button>
+    <button class="orientation-btn" id="btnLandscape" type="button" aria-pressed="false"
+            title="Landscape" data-i18n-title="orientationLandscape" aria-label="Landscape" data-i18n-aria="orientationLandscape">🔄</button>
   </div>
 
-  <div class="toolbar-group">
-    <label data-i18n="zoom">Zoom:</label>
+  <div class="toolbar-group" role="group" aria-labelledby="zoomLabelGroup">
+    <label id="zoomLabelGroup" data-i18n="zoom">Zoom:</label>
     <div class="zoom-control">
-      <button onclick="changeZoom(-10)">−</button>
-      <span id="zoomLabel">100%</span>
-      <button onclick="changeZoom(10)">+</button>
+      <button type="button" id="btnZoomOut" title="Zoom out" data-i18n-title="zoomOut" aria-label="Zoom out" data-i18n-aria="zoomOut">−</button>
+      <span id="zoomLabel" aria-live="polite">100%</span>
+      <button type="button" id="btnZoomIn" title="Zoom in" data-i18n-title="zoomIn" aria-label="Zoom in" data-i18n-aria="zoomIn">+</button>
     </div>
   </div>
 
   <div class="toolbar-group">
-    <button class="btn" onclick="reloadPreview()" title="Reload">🔄</button>
-    <button class="btn" onclick="openInNewTab()" title="New tab">↗</button>
-    <button class="btn" onclick="resetAll()"><span data-i18n="reset">⟲ Reset</span></button>
+    <button class="btn" id="btnReload" type="button" title="Reload preview" data-i18n-title="reloadLabel" aria-label="Reload preview" data-i18n-aria="reloadLabel">🔄</button>
+    <button class="btn" id="btnOpenTab" type="button" title="Open preview in a new tab" data-i18n-title="openNewTabLabel" aria-label="Open preview in a new tab" data-i18n-aria="openNewTabLabel">↗</button>
+    <button class="btn" id="btnReset" type="button"><span data-i18n="reset">⟲ Reset</span></button>
   </div>
 </div>
 
 <!-- ===== SELECTOR MODE ===== -->
 <div class="toolbar" style="padding: 8px 20px; gap: 16px;">
-  <div class="mode-tabs">
-    <button class="mode-tab active" onclick="switchMode('device')"><span data-i18n="tabDevices">📱 Devices</span></button>
-    <button class="mode-tab" onclick="switchMode('ratio')"><span data-i18n="tabRatio">📐 Aspect ratio</span></button>
-    <button class="mode-tab" onclick="switchMode('custom')"><span data-i18n="tabCustom">⚙️ Custom</span></button>
+  <div class="mode-tabs" role="tablist" aria-label="Preview mode" data-i18n-aria="modesLabel">
+    <button class="mode-tab active" id="tabDevice" type="button" role="tab" aria-selected="true" aria-controls="panelDevice" data-mode="device"><span data-i18n="tabDevices">📱 Devices</span></button>
+    <button class="mode-tab" id="tabRatio" type="button" role="tab" aria-selected="false" aria-controls="panelRatio" tabindex="-1" data-mode="ratio"><span data-i18n="tabRatio">📐 Aspect ratio</span></button>
+    <button class="mode-tab" id="tabCustom" type="button" role="tab" aria-selected="false" aria-controls="panelCustom" tabindex="-1" data-mode="custom"><span data-i18n="tabCustom">⚙️ Custom</span></button>
   </div>
 </div>
 
 <!-- ===== PANEL: DEVICES ===== -->
-<div class="toolbar panel active" id="panelDevice" style="padding: 8px 20px;">
+<div class="toolbar panel active" id="panelDevice" role="tabpanel" aria-labelledby="tabDevice" style="padding: 8px 20px;">
   <div class="toolbar-group">
     <div class="device-selector" id="deviceSelector"></div>
   </div>
 </div>
 
 <!-- ===== PANEL: ASPECT RATIOS ===== -->
-<div class="toolbar panel" id="panelRatio" style="padding: 8px 20px;">
+<div class="toolbar panel" id="panelRatio" role="tabpanel" aria-labelledby="tabRatio" hidden style="padding: 8px 20px;">
   <div class="toolbar-group">
-    <label data-i18n="screenFormat">Screen format:</label>
-    <div class="ratio-selector" id="ratioSelector"></div>
+    <label id="screenFormatLabel" data-i18n="screenFormat">Screen format:</label>
+    <div class="ratio-selector" id="ratioSelector" role="group" aria-labelledby="screenFormatLabel"></div>
   </div>
   <div class="toolbar-group">
-    <label data-i18n="baseWidth">Base width:</label>
-    <input type="number" class="input-num" id="ratioBaseWidth" value="390" min="200" max="2000" onchange="applyRatio()">
-    <span style="font-size:12px;color:var(--text-3);">px</span>
+    <label for="ratioBaseWidth" data-i18n="baseWidth">Base size:</label>
+    <input type="number" class="input-num" id="ratioBaseWidth" value="390" min="200" max="2000" step="10" inputmode="numeric">
+    <span style="font-size:12px;color:var(--text-2);">px</span>
   </div>
   <div class="toolbar-group">
-    <label data-i18n="displayWidth">Display width:</label>
-    <input type="range" id="ratioDisplayScale" min="20" max="150" value="100" style="width:120px;" oninput="document.getElementById('ratioScaleLabel').textContent=this.value+'%';applyRatio();">
+    <label for="ratioDisplayScale" data-i18n="displayWidth">Display width:</label>
+    <input type="range" id="ratioDisplayScale" min="20" max="150" value="100" style="width:120px;">
     <span id="ratioScaleLabel" style="font-size:12px;color:var(--accent-hover);min-width:40px;">100%</span>
   </div>
 </div>
 
 <!-- ===== PANEL: CUSTOM ===== -->
-<div class="toolbar panel" id="panelCustom" style="padding: 8px 20px;">
+<div class="toolbar panel" id="panelCustom" role="tabpanel" aria-labelledby="tabCustom" hidden style="padding: 8px 20px;">
   <div class="toolbar-group">
-    <label data-i18n="width">Width:</label>
-    <input type="number" class="input-num" id="customW" value="390" min="100" max="4000" onchange="applyCustom()">
-    <label>×</label>
-    <label data-i18n="height">Height:</label>
-    <input type="number" class="input-num" id="customH" value="844" min="100" max="4000" onchange="applyCustom()">
-    <span style="font-size:12px;color:var(--text-3);">px</span>
+    <label for="customW" data-i18n="width">Width:</label>
+    <input type="number" class="input-num" id="customW" value="390" min="100" max="4000" step="10" inputmode="numeric">
+    <span aria-hidden="true">×</span>
+    <label for="customH" data-i18n="height">Height:</label>
+    <input type="number" class="input-num" id="customH" value="844" min="100" max="4000" step="10" inputmode="numeric">
+    <span style="font-size:12px;color:var(--text-2);">px</span>
   </div>
   <div class="toolbar-group">
-    <label data-i18n="frameType">Frame type:</label>
-    <select id="customFrameType" class="input-num" style="width:120px;" onchange="applyCustom()">
+    <label for="customFrameType" data-i18n="frameType">Frame type:</label>
+    <select id="customFrameType" class="input-num" style="width:120px;">
       <option value="phone" data-i18n="framePhone">Phone</option>
       <option value="tablet" data-i18n="frameTablet">Tablet</option>
       <option value="none" data-i18n="frameNone">No frame</option>
     </select>
   </div>
   <div class="toolbar-group">
-    <label data-i18n="scale">Scale:</label>
-    <input type="range" id="customScale" min="20" max="150" value="100" style="width:120px;" oninput="document.getElementById('customScaleLabel').textContent=this.value+'%';applyCustom();">
+    <label for="customScale" data-i18n="scale">Scale:</label>
+    <input type="range" id="customScale" min="20" max="150" value="100" style="width:120px;">
     <span id="customScaleLabel" style="font-size:12px;color:var(--accent-hover);min-width:40px;">100%</span>
   </div>
+</div>
 </div>
 
 <!-- ===== PREVIEW AREA ===== -->
 <div class="preview-area" id="previewArea">
+  <div class="drop-hint" id="dropHint" hidden><span data-i18n="dropHere">Drop the HTML file here</span></div>
+  <p class="unsaved-note" id="unsavedNote" hidden data-i18n="unsavedNote">The previewed page is not saved: reopening the app starts with an empty frame.</p>
   <div class="preview-inner">
     <div class="device-frame phone" id="deviceFrame" style="display:none;">
       <div class="notch"></div>
@@ -878,7 +1034,7 @@
           <div class="spinner"></div>
           <p data-i18n="loading">Loading...</p>
         </div>
-        <iframe id="previewFrame" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"></iframe>
+        <iframe id="previewFrame" title="Preview frame" data-i18n-title="previewFrameLabel" sandbox="allow-scripts allow-forms allow-popups allow-modals"></iframe>
       </div>
     </div>
 
@@ -886,10 +1042,13 @@
       <div class="es-icon">📱</div>
       <div class="es-title" data-i18n="emptyTitle">Nothing to preview yet</div>
       <div class="es-text" data-i18n="emptyText">Load an HTML file from your device or paste a URL above - then see how it looks on iPhone, iPad, Android and desktop frames.</div>
-      <div class="es-hint" data-i18n="emptyHint">Tip: press ? in a shared link like example.com/?lang=en - it works too.</div>
+      <div class="es-hint" data-i18n="emptyHint">Tip: share a ready setup with ?lang=en, ?lang=sr-Cyrl or ?theme=light in the link.</div>
+      <div class="es-note" data-i18n="sandboxNote">Files are rendered in a sandboxed frame: the previewed page cannot read this app, your settings or your other tabs.</div>
+      <div class="es-note" data-i18n="embedNote">Some sites refuse to be embedded (X-Frame-Options or CSP) - in that case use a local file.</div>
     </div>
   </div>
 </div>
+</main>
 
 <!-- ===== DONATION FOOTER ===== -->
 <!-- SPDX-License-Identifier: Apache-2.0 · Copyright 2026 TekiDeki. -->
@@ -910,7 +1069,7 @@
 <div class="tekideki-credits" id="tekideki-credits"><span>© 2026 <a href="https://github.com/TekiDeki" target="_blank" rel="noopener noreferrer">TekiDeki</a></span><span aria-hidden="true">·</span><a id="tekideki-source" href="https://github.com/TekiDeki/Mobile-Preview" target="_blank" rel="noopener noreferrer">Source code</a><span aria-hidden="true">·</span><a href="https://tekideki.github.io/Mobile-Preview/LICENSE" target="_blank" rel="noopener noreferrer">Apache-2.0</a></div>
 </footer>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <script>
 /* =====================================================================
@@ -933,7 +1092,7 @@ const translations = {
     tabRatio: "📐 Raport de aspect",
     tabCustom: "⚙️ Personalizat",
     screenFormat: "Format ecran:",
-    baseWidth: "Lățime de bază:",
+    baseWidth: "Dimensiune de bază:",
     displayWidth: "Lățime afișare:",
     width: "Lățime:",
     height: "Înălțime:",
@@ -945,7 +1104,31 @@ const translations = {
     loading: "Se încarcă...",
     emptyTitle: "Nimic de previzualizat încă",
     emptyText: "Încarcă un fișier HTML de pe dispozitiv sau lipește un URL mai sus - apoi vezi cum arată pe rame de iPhone, iPad, Android și desktop.",
-    emptyHint: "Sfat: încearcă ? și parametrul ?lang=ro într-un link partajat - funcționează.",
+    emptyHint: "Sfat: partajează o configurare gata făcută cu ?lang=ro, ?lang=sr-Cyrl sau ?theme=light în link.",
+    sandboxNote: "Fișierele sunt randate într-o ramă izolată: pagina previzualizată nu poate citi această aplicație, setările tale sau alte file.",
+    embedNote: "Unele site-uri refuză încadrarea (X-Frame-Options sau CSP) - în acest caz folosește un fișier local.",
+    dropHere: "Lasă fișierul HTML aici",
+    langLabel: "Limbă",
+    themeToggleLabel: "Comută tema",
+    orientationPortrait: "Portret",
+    orientationLandscape: "Peisaj",
+    zoomOut: "Micșorează",
+    zoomIn: "Mărește",
+    reloadLabel: "Reîncarcă previzualizarea",
+    openNewTabLabel: "Deschide previzualizarea într-o filă nouă",
+    fileInputLabel: "Deschide un fișier HTML local",
+    urlInputLabel: "Adresa URL de previzualizat",
+    previewFrameLabel: "Rama de previzualizare",
+    modesLabel: "Mod de previzualizare",
+    toastClamped: "Valoare limitată la {min}-{max}.",
+    toastFileTooBig: "Fișierul este prea mare (maxim {max} MB).",
+    toastWrongFile: "Doar fișiere .html sau .htm pot fi previzualizate.",
+    updateReady: "O versiune nouă este disponibilă.",
+    updateReload: "Reîncarcă",
+    tools: "Unelte",
+    toolsToggleLabel: "Arată sau ascunde uneltele",
+    unsavedNote: "Pagina previzualizată nu este salvată: la redeschidere aplicația pornește cu rama goală.",
+    toastFileLoaded: "Fișier încărcat.",
     donate: "Merit o cafeluță?",
     donateSub: "Susține pe PayPal",
     theme: "Temă",
@@ -956,6 +1139,7 @@ const translations = {
     toastTheme: "Temă schimbată",
     toastInvalidUrl: "Introdu un URL valid.",
     toastNoContent: "Nimic de deschis.",
+    toastReset: "Resetat la iPhone 12, portret, 100%.",
     device: "Dispozitiv",
     ratio: "Raport",
     custom: "Personalizat"
@@ -972,7 +1156,7 @@ const translations = {
     tabRatio: "📐 Aspect ratio",
     tabCustom: "⚙️ Custom",
     screenFormat: "Screen format:",
-    baseWidth: "Base width:",
+    baseWidth: "Base size:",
     displayWidth: "Display width:",
     width: "Width:",
     height: "Height:",
@@ -984,7 +1168,31 @@ const translations = {
     loading: "Loading...",
     emptyTitle: "Nothing to preview yet",
     emptyText: "Load an HTML file from your device or paste a URL above - then see how it looks on iPhone, iPad, Android and desktop frames.",
-    emptyHint: "Tip: sharing links with ?lang=en work too.",
+    emptyHint: "Tip: share a ready setup with ?lang=en, ?lang=sr-Cyrl or ?theme=light in the link.",
+    sandboxNote: "Files are rendered in a sandboxed frame: the previewed page cannot read this app, your settings or your other tabs.",
+    embedNote: "Some sites refuse to be embedded (X-Frame-Options or CSP) - in that case use a local file.",
+    dropHere: "Drop the HTML file here",
+    langLabel: "Language",
+    themeToggleLabel: "Toggle theme",
+    orientationPortrait: "Portrait",
+    orientationLandscape: "Landscape",
+    zoomOut: "Zoom out",
+    zoomIn: "Zoom in",
+    reloadLabel: "Reload preview",
+    openNewTabLabel: "Open preview in a new tab",
+    fileInputLabel: "Open a local HTML file",
+    urlInputLabel: "URL to preview",
+    previewFrameLabel: "Preview frame",
+    modesLabel: "Preview mode",
+    toastClamped: "Value limited to {min}-{max}.",
+    toastFileTooBig: "File is too large (max {max} MB).",
+    toastWrongFile: "Only .html or .htm files can be previewed.",
+    updateReady: "A new version is available.",
+    updateReload: "Reload",
+    tools: "Tools",
+    toolsToggleLabel: "Show or hide the tools",
+    unsavedNote: "The previewed page is not saved: reopening the app starts with an empty frame.",
+    toastFileLoaded: "File loaded.",
     donate: "Buy me a coffee?",
     donateSub: "Support on PayPal",
     theme: "Theme",
@@ -995,6 +1203,7 @@ const translations = {
     toastTheme: "Theme changed",
     toastInvalidUrl: "Enter a valid URL.",
     toastNoContent: "Nothing to open.",
+    toastReset: "Reset to iPhone 12, portrait, 100%.",
     device: "Device",
     ratio: "Ratio",
     custom: "Custom"
@@ -1011,7 +1220,7 @@ const translations = {
     tabRatio: "📐 Odnos stranica",
     tabCustom: "⚙️ Prilagođeno",
     screenFormat: "Format ekrana:",
-    baseWidth: "Osnovna širina:",
+    baseWidth: "Osnovna veličina:",
     displayWidth: "Širina prikaza:",
     width: "Širina:",
     height: "Visina:",
@@ -1023,7 +1232,31 @@ const translations = {
     loading: "Učitavanje...",
     emptyTitle: "Još nema sadržaja za pregled",
     emptyText: "Učitajte HTML fajl sa uređaja ili nalepite URL iznad - zatim pogledajte kako izgleda na iPhone, iPad, Android i desktop okvirima.",
-    emptyHint: "Savet: linkovi sa ?lang=sr-Latn takođe rade.",
+    emptyHint: "Savet: podeli gotovu postavku sa ?lang=sr-Latn, ?lang=sr-Cyrl ili ?theme=light u linku.",
+    sandboxNote: "Fajlovi se prikazuju u izolovanom okviru: prikazana stranica ne može da čita ovu aplikaciju, tvoja podešavanja ili druge kartice.",
+    embedNote: "Neki sajtovi odbijaju ugrađivanje (X-Frame-Options ili CSP) - u tom slučaju koristi lokalni fajl.",
+    dropHere: "Spusti HTML fajl ovde",
+    langLabel: "Jezik",
+    themeToggleLabel: "Promeni temu",
+    orientationPortrait: "Uspravno",
+    orientationLandscape: "Položeno",
+    zoomOut: "Umanji",
+    zoomIn: "Uvećaj",
+    reloadLabel: "Ponovo učitaj pregled",
+    openNewTabLabel: "Otvori pregled u novoj kartici",
+    fileInputLabel: "Otvori lokalni HTML fajl",
+    urlInputLabel: "URL adresa za pregled",
+    previewFrameLabel: "Okvir za pregled",
+    modesLabel: "Režim pregleda",
+    toastClamped: "Vrednost ograničena na {min}-{max}.",
+    toastFileTooBig: "Fajl je prevelik (najviše {max} MB).",
+    toastWrongFile: "Samo .html ili .htm fajlovi mogu da se pregledaju.",
+    updateReady: "Dostupna je nova verzija.",
+    updateReload: "Učitaj ponovo",
+    tools: "Alati",
+    toolsToggleLabel: "Prikaži ili sakrij alate",
+    unsavedNote: "Prikazana stranica se ne čuva: pri ponovnom otvaranju aplikacija počinje sa praznim okvirom.",
+    toastFileLoaded: "Fajl je učitan.",
     donate: "Časti me kafom?",
     donateSub: "Podrži na PayPal-u",
     theme: "Tema",
@@ -1034,6 +1267,7 @@ const translations = {
     toastTheme: "Tema promenjena",
     toastInvalidUrl: "Unesite ispravan URL.",
     toastNoContent: "Nema sadržaja za otvaranje.",
+    toastReset: "Resetovano na iPhone 12, uspravno, 100%.",
     device: "Uređaj",
     ratio: "Odnos",
     custom: "Prilagođeno"
@@ -1050,7 +1284,7 @@ const translations = {
     tabRatio: "📐 Однос страница",
     tabCustom: "⚙️ Прилагођено",
     screenFormat: "Формат екрана:",
-    baseWidth: "Основна ширина:",
+    baseWidth: "Основна величина:",
     displayWidth: "Ширина приказа:",
     width: "Ширина:",
     height: "Висина:",
@@ -1062,7 +1296,31 @@ const translations = {
     loading: "Учитавање...",
     emptyTitle: "Још нема садржаја за преглед",
     emptyText: "Учитајте HTML фајл са уређаја или налепите URL изнад - затим погледајте како изгледа на iPhone, iPad, Android и десктоп оквирима.",
-    emptyHint: "Савет: линкови са ?lang=sr-Cyrl такође раде.",
+    emptyHint: "Савет: подели готову поставку са ?lang=sr-Cyrl, ?lang=sr-Latn или ?theme=light у линку.",
+    sandboxNote: "Фајлови се приказују у изолованом оквиру: приказана страница не може да чита ову апликацију, твоја подешавања или друге картице.",
+    embedNote: "Неки сајтови одбијају уграђивање (X-Frame-Options или CSP) - у том случају користи локални фајл.",
+    dropHere: "Спусти HTML фајл овде",
+    langLabel: "Језик",
+    themeToggleLabel: "Промени тему",
+    orientationPortrait: "Усправно",
+    orientationLandscape: "Положено",
+    zoomOut: "Умањи",
+    zoomIn: "Увећај",
+    reloadLabel: "Поново учитај преглед",
+    openNewTabLabel: "Отвори преглед у новој картици",
+    fileInputLabel: "Отвори локални HTML фајл",
+    urlInputLabel: "URL адреса за преглед",
+    previewFrameLabel: "Оквир за преглед",
+    modesLabel: "Режим прегледа",
+    toastClamped: "Вредност ограничена на {min}-{max}.",
+    toastFileTooBig: "Фајл је превелик (највише {max} MB).",
+    toastWrongFile: "Само .html или .htm фајлови могу да се прегледају.",
+    updateReady: "Доступна је нова верзија.",
+    updateReload: "Учитај поново",
+    tools: "Алати",
+    toolsToggleLabel: "Прикажи или сакриј алате",
+    unsavedNote: "Приказана страница се не чува: при поновном отварању апликација почиње са празним оквиром.",
+    toastFileLoaded: "Фајл је учитан.",
     donate: "Части ме кафом?",
     donateSub: "Подржи на PayPal-у",
     theme: "Тема",
@@ -1073,6 +1331,7 @@ const translations = {
     toastTheme: "Тема промењена",
     toastInvalidUrl: "Унесите исправан URL.",
     toastNoContent: "Нема садржаја за отварање.",
+    toastReset: "Ресетовано на iPhone 12, усправно, 100%.",
     device: "Уређај",
     ratio: "Однос",
     custom: "Прилагођено"
@@ -1128,6 +1387,17 @@ let isLocalFile = false;
 const LS_LANG = 'mp-lang';
 const LS_THEME = 'mp-theme';
 
+/* Storage that keeps working when localStorage is blocked (private mode,
+   strict cookie settings): values fall back to an in-memory map. */
+const memoryStore = new Map();
+function storeGet(key) {
+  try { return localStorage.getItem(key); } catch (e) { return memoryStore.has(key) ? memoryStore.get(key) : null; }
+}
+function storeSet(key, value) {
+  memoryStore.set(key, value);
+  try { localStorage.setItem(key, value); return true; } catch (e) { return false; }
+}
+
 // ===== UTIL =====
 function t(key) {
   const dict = translations[currentLang] || translations.en;
@@ -1147,7 +1417,7 @@ function toast(msg) {
 function applyLanguage(lang) {
   if (!translations[lang]) lang = 'en';
   currentLang = lang;
-  localStorage.setItem(LS_LANG, lang);
+  storeSet(LS_LANG, lang);
 
   document.documentElement.lang = lang === 'sr-Cyrl' ? 'sr-Cyrl' : (lang === 'sr-Latn' ? 'sr-Latn' : lang);
   document.title = t('title');
@@ -1161,22 +1431,35 @@ function applyLanguage(lang) {
     if (val) el.textContent = val;
   });
 
-  // theme button label
+  // accessible names and tooltips: [data-i18n-aria] -> aria-label, [data-i18n-title] -> title
+  document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+    const val = t(el.getAttribute('data-i18n-aria'));
+    if (val) el.setAttribute('aria-label', val);
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach((el) => {
+    const val = t(el.getAttribute('data-i18n-title'));
+    if (val) el.setAttribute('title', val);
+  });
+
+  // theme button label + its accessible name
   updateThemeLabel();
 }
 
 function updateThemeLabel() {
   const icon = document.getElementById('themeIcon');
   const label = document.getElementById('themeLabel');
-  if (currentTheme === 'dark') { icon.textContent = '☀️'; label.textContent = t('themeLight'); }
-  else { icon.textContent = '🌙'; label.textContent = t('themeDark'); }
+  const toLight = currentTheme === 'dark';
+  icon.textContent = toLight ? '☀️' : '🌙';
+  label.textContent = toLight ? t('themeLight') : t('themeDark');
+  const button = document.getElementById('themeToggle');
+  if (button) button.setAttribute('aria-label', t('themeToggleLabel') + ': ' + label.textContent);
 }
 
 // ===== THEME =====
 function applyTheme(theme, silent) {
   currentTheme = theme;
   document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem(LS_THEME, theme);
+  storeSet(LS_THEME, theme);
   const mt = document.querySelector('meta[name="theme-color"]');
   if (mt) mt.setAttribute('content', theme === 'dark' ? '#0e1526' : '#f4f6fb');
   updateThemeLabel();
@@ -1187,7 +1470,7 @@ function initTheme() {
   const urlParams = new URLSearchParams(window.location.search);
   const urlTheme = urlParams.get('theme');
   if (urlTheme === 'light' || urlTheme === 'dark') { applyTheme(urlTheme, true); return; }
-  const saved = localStorage.getItem(LS_THEME);
+  const saved = storeGet(LS_THEME);
   if (saved === 'light' || saved === 'dark') { applyTheme(saved, true); return; }
   const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   applyTheme(prefersDark ? 'dark' : 'light', true);
@@ -1199,9 +1482,50 @@ function initLanguage() {
   const urlLang = urlParams.get('lang');
   const lang = (urlLang && translations[urlLang])
     ? urlLang
-    : (localStorage.getItem(LS_LANG) || (navigator.language && navigator.language.startsWith('en') ? 'en' : 'ro'));
+    : (storeGet(LS_LANG) || (navigator.language && navigator.language.startsWith('en') ? 'en' : 'ro'));
   applyLanguage(lang);
   document.getElementById('langSelect').value = lang;
+}
+
+// ===== DRAG AND DROP =====
+/* Dropping an .html file anywhere on the preview area loads it, the same way
+   the file picker does. */
+function setupDropZone() {
+  const zone = document.getElementById('previewArea');
+  const hint = document.getElementById('dropHint');
+  let depth = 0;
+
+  const showHint = () => { hint.hidden = false; };
+  const hideHint = () => { hint.hidden = true; depth = 0; };
+
+  ['dragenter', 'dragover'].forEach((type) => {
+    zone.addEventListener(type, (event) => {
+      event.preventDefault();
+      if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy';
+      if (type === 'dragenter') depth += 1;
+      showHint();
+    });
+  });
+  zone.addEventListener('dragleave', () => {
+    depth -= 1;
+    if (depth <= 0) hideHint();
+  });
+  zone.addEventListener('drop', (event) => {
+    event.preventDefault();
+    hideHint();
+    const files = event.dataTransfer && event.dataTransfer.files;
+    if (!files || !files.length) return;
+    const file = files[0];
+    if (!/\.html?$/i.test(file.name) && file.type !== 'text/html') {
+      toast(t('toastWrongFile'));
+      return;
+    }
+    loadLocalFile(file);
+  });
+
+  // a file dropped outside the zone must not navigate the page away
+  window.addEventListener('dragover', (event) => event.preventDefault());
+  window.addEventListener('drop', (event) => event.preventDefault());
 }
 
 // ===== INIT =====
@@ -1210,33 +1534,114 @@ function init() {
   initLanguage();
   renderDeviceButtons();
   renderRatioButtons();
-  selectDevice(currentDevice.id);
 
+  // tools panel: collapsed by default on phones, remembers the user's choice
+  const toolsPanel = document.getElementById('toolsPanel');
+  const toolsToggle = document.getElementById('toolsToggle');
+  const smallScreen = window.matchMedia ? window.matchMedia('(max-width: 720px)') : null;
+  const savedTools = storeGet('mp-tools');
+  const toolsOpen = savedTools === 'open' || (savedTools !== 'closed' && !(smallScreen && smallScreen.matches));
+  const setTools = (open, remember) => {
+    toolsPanel.hidden = !open;
+    toolsToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (remember) storeSet('mp-tools', open ? 'open' : 'closed');
+  };
+  setTools(toolsOpen, false);
+  toolsToggle.addEventListener('click', () => {
+    setTools(toolsPanel.hidden, true);
+  });
+
+  // mode tabs
+  document.querySelectorAll('.mode-tab').forEach((tab) => {
+    tab.addEventListener('click', () => switchMode(tab.dataset.mode));
+  });
+  document.querySelector('.mode-tabs').addEventListener('keydown', onTabKeydown);
+
+  // generated selectors (event delegation, no inline handlers)
+  document.getElementById('deviceSelector').addEventListener('click', (event) => {
+    const button = event.target.closest('.device-btn');
+    if (button) selectDevice(button.dataset.id);
+  });
+  document.getElementById('ratioSelector').addEventListener('click', (event) => {
+    const button = event.target.closest('.ratio-btn');
+    if (button) selectRatio(button.dataset.id);
+  });
+
+  // loading content
+  const fileInput = document.getElementById('fileInput');
+  document.getElementById('btnLoadFile').addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', (event) => {
+    const file = event.target.files && event.target.files[0];
+    loadLocalFile(file);
+    fileInput.value = '';
+  });
+  document.getElementById('btnLoadUrl').addEventListener('click', loadFromUrl);
+  document.getElementById('urlInput').addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') { event.preventDefault(); loadFromUrl(); }
+  });
+  setupDropZone();
+
+  // frame controls
+  document.getElementById('btnPortrait').addEventListener('click', () => setOrientation('portrait'));
+  document.getElementById('btnLandscape').addEventListener('click', () => setOrientation('landscape'));
+  document.getElementById('btnZoomOut').addEventListener('click', () => changeZoom(-10));
+  document.getElementById('btnZoomIn').addEventListener('click', () => changeZoom(10));
+  document.getElementById('btnReload').addEventListener('click', reloadPreview);
+  document.getElementById('btnOpenTab').addEventListener('click', openInNewTab);
+  document.getElementById('btnReset').addEventListener('click', resetAll);
+
+  // panel inputs
+  document.getElementById('ratioBaseWidth').addEventListener('change', applyRatio);
+  document.getElementById('ratioDisplayScale').addEventListener('input', () => {
+    syncScaleLabel('ratioDisplayScale', 'ratioScaleLabel');
+    applyRatio();
+  });
+  ['customW', 'customH', 'customFrameType'].forEach((id) => {
+    document.getElementById(id).addEventListener('change', applyCustom);
+  });
+  document.getElementById('customScale').addEventListener('input', () => {
+    syncScaleLabel('customScale', 'customScaleLabel');
+    applyCustom();
+  });
+
+  // interface
   document.getElementById('langSelect').addEventListener('change', (e) => {
     applyLanguage(e.target.value);
     toast(t('toastLang'));
-    renderRatioButtonsStaticLabels();
   });
-
   document.getElementById('themeToggle').addEventListener('click', () => {
     applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
   });
 
-  // respect live OS theme change when user hasn't chosen manually
-  if (window.matchMedia) {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      if (!localStorage.getItem(LS_THEME)) applyTheme(e.matches ? 'dark' : 'light', true);
-    });
+  // follow the system theme until the user picks one explicitly
+  const scheme = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  if (scheme) {
+    const onSchemeChange = (event) => {
+      if (!storeGet(LS_THEME)) applyTheme(event.matches ? 'dark' : 'light', true);
+    };
+    if (scheme.addEventListener) scheme.addEventListener('change', onSchemeChange);
+    else if (scheme.addListener) scheme.addListener(onSchemeChange);
   }
+
+  // ?mode=device|ratio|custom opens a panel directly (also used by shortcuts)
+  const params = new URLSearchParams(location.search);
+  const urlMode = params.get('mode');
+  switchMode(MODES.indexOf(urlMode) === -1 ? 'device' : urlMode);
+  selectDevice(currentDevice.id);
+
+  // ?focus=url|file lands on the matching control, for the PWA shortcuts
+  const focusTarget = params.get('focus');
+  if (focusTarget === 'url') document.getElementById('urlInput').focus();
+  else if (focusTarget === 'file') document.getElementById('btnLoadFile').focus();
 }
 
 function renderDeviceButtons() {
   const container = document.getElementById('deviceSelector');
   container.innerHTML = devices.map(d => `
-    <button class="device-btn" data-id="${d.id}" onclick="selectDevice('${d.id}')">
-      <span class="icon">${d.icon}</span>
+    <button class="device-btn" type="button" data-id="${d.id}" aria-pressed="false">
+      <span class="icon" aria-hidden="true">${d.icon}</span>
       <span class="name">${d.name}</span>
-      <span class="size">${d.width}×${d.height}</span>
+      <span class="size">${d.width}×${d.height} px</span>
     </button>
   `).join('');
 }
@@ -1249,32 +1654,61 @@ function renderRatioButtons() {
     if (r.w >= r.h) { boxW = maxDim; boxH = Math.round(maxDim * (r.h / r.w)); }
     else { boxH = maxDim; boxW = Math.round(maxDim * (r.w / r.h)); }
     return `
-      <button class="ratio-btn" data-id="${r.id}" onclick="selectRatio('${r.id}')">
+      <button class="ratio-btn" type="button" data-id="${r.id}" aria-pressed="false" aria-label="${r.label}">
         <div class="ratio-preview">
           <div class="ratio-box" style="width:${boxW}px;height:${boxH}px;"></div>
         </div>
-        <span class="ratio-label">${r.label}</span>
+        <span class="ratio-label" aria-hidden="true">${r.label}</span>
       </button>
     `;
   }).join('');
 }
 
-function renderRatioButtonsStaticLabels() { /* ratio labels are numeric - no translation needed */ }
+function syncScaleLabel(inputId, labelId) {
+  const input = document.getElementById(inputId);
+  const label = document.getElementById(labelId);
+  if (input && label) label.textContent = input.value + '%';
+}
 
 // ===== MODE SWITCH =====
-function switchMode(newMode) {
+const MODES = ['device', 'ratio', 'custom'];
+
+function switchMode(newMode, options) {
+  if (MODES.indexOf(newMode) === -1) newMode = 'device';
+  const opts = options || {};
   mode = newMode;
-  const modes = ['device', 'ratio', 'custom'];
   document.querySelectorAll('.mode-tab').forEach((tb, i) => {
-    tb.classList.toggle('active', modes[i] === newMode);
+    const active = MODES[i] === newMode;
+    tb.classList.toggle('active', active);
+    tb.setAttribute('aria-selected', active ? 'true' : 'false');
+    tb.setAttribute('tabindex', active ? '0' : '-1');
+    if (active && opts.focus) tb.focus();
   });
-  document.getElementById('panelDevice').classList.toggle('active', newMode === 'device');
-  document.getElementById('panelRatio').classList.toggle('active', newMode === 'ratio');
-  document.getElementById('panelCustom').classList.toggle('active', newMode === 'custom');
+  MODES.forEach((name) => {
+    const panel = document.getElementById('panel' + name.charAt(0).toUpperCase() + name.slice(1));
+    const active = name === newMode;
+    panel.classList.toggle('active', active);
+    panel.hidden = !active;
+  });
 
   if (newMode === 'device') applyDevice();
   else if (newMode === 'ratio') applyRatio();
-  else if (newMode === 'custom') applyCustom();
+  else applyCustom();
+}
+
+/* Arrow keys, Home and End move between the mode tabs. */
+function onTabKeydown(event) {
+  const tabs = [...document.querySelectorAll('.mode-tab')];
+  const currentIndex = tabs.indexOf(event.target.closest('.mode-tab'));
+  if (currentIndex === -1) return;
+  let next = null;
+  if (event.key === 'ArrowRight') next = (currentIndex + 1) % tabs.length;
+  else if (event.key === 'ArrowLeft') next = (currentIndex - 1 + tabs.length) % tabs.length;
+  else if (event.key === 'Home') next = 0;
+  else if (event.key === 'End') next = tabs.length - 1;
+  if (next === null) return;
+  event.preventDefault();
+  switchMode(MODES[next], { focus: true });
 }
 
 // ===== DEVICE SELECT =====
@@ -1282,9 +1716,11 @@ function selectDevice(id) {
   currentDevice = devices.find(d => d.id === id) || devices[0];
   currentRatio = null;
   document.querySelectorAll('.device-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.id === id);
+    const active = b.dataset.id === id;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-pressed', active ? 'true' : 'false');
   });
-  document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.ratio-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
   applyDevice();
 }
 
@@ -1292,17 +1728,23 @@ function selectDevice(id) {
 function selectRatio(id) {
   currentRatio = aspectRatios.find(r => r.id === id);
   document.querySelectorAll('.ratio-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.id === id);
+    const active = b.dataset.id === id;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-pressed', active ? 'true' : 'false');
   });
-  document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.device-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
   applyRatio();
 }
 
 // ===== ORIENTATION =====
 function setOrientation(o) {
-  orientation = o;
-  document.getElementById('btnPortrait').classList.toggle('active', o === 'portrait');
-  document.getElementById('btnLandscape').classList.toggle('active', o === 'landscape');
+  orientation = o === 'landscape' ? 'landscape' : 'portrait';
+  const portrait = document.getElementById('btnPortrait');
+  const landscape = document.getElementById('btnLandscape');
+  portrait.classList.toggle('active', orientation === 'portrait');
+  landscape.classList.toggle('active', orientation === 'landscape');
+  portrait.setAttribute('aria-pressed', orientation === 'portrait' ? 'true' : 'false');
+  landscape.setAttribute('aria-pressed', orientation === 'landscape' ? 'true' : 'false');
   reapply();
 }
 
@@ -1327,33 +1769,47 @@ function applyDevice() {
   renderFrame(w, h, currentDevice.type, zoom / 100);
 }
 
+/* Keeps a numeric input inside its declared range and says so when it clamps. */
+function clampNumberInput(input, min, max, fallback) {
+  if (!input) return fallback;
+  const raw = input.value.trim();
+  const parsed = Number.parseInt(raw, 10);
+  let value = Number.isFinite(parsed) ? parsed : fallback;
+  const outside = raw !== '' && (value < min || value > max);
+  if (value < min) value = min;
+  if (value > max) value = max;
+  if (String(value) !== raw) input.value = String(value);
+  if (outside) {
+    toast(t('toastClamped').replace('{min}', String(min)).replace('{max}', String(max)));
+  }
+  return value;
+}
+
 // ===== APPLY RATIO =====
 function applyRatio() {
   if (!currentRatio) currentRatio = aspectRatios[5];
-  const baseWidth = parseFloat(document.getElementById('ratioBaseWidth').value) || 390;
-  const displayScale = (parseFloat(document.getElementById('ratioDisplayScale').value) || 100) / 100;
+  const baseSize = clampNumberInput(document.getElementById('ratioBaseWidth'), 200, 2000, 390);
+  const scaleValue = clampNumberInput(document.getElementById('ratioDisplayScale'), 20, 150, 100);
+  const displayScale = scaleValue / 100;
+
+  /* Portrait always renders a frame taller than wide and landscape always
+     renders one wider than tall, whichever ratio is picked (16:9 and 9:16
+     both behave as expected instead of swapping the frame). */
+  const ratioVal = currentRatio.w / currentRatio.h;
+  const longSide = Math.round(baseSize * Math.max(ratioVal, 1 / ratioVal));
 
   let w, h;
-  const ratioVal = currentRatio.w / currentRatio.h;
-
-  if (orientation === 'portrait') {
-    w = baseWidth;
-    h = Math.round(w / ratioVal);
-    if (h < w) { w = Math.round(baseWidth * ratioVal); h = baseWidth; }
-  } else {
-    w = baseWidth;
-    h = Math.round(w / ratioVal);
-    if (h > w) { w = Math.round(baseWidth * ratioVal); h = baseWidth; }
-  }
+  if (orientation === 'landscape') { h = baseSize; w = longSide; }
+  else { w = baseSize; h = longSide; }
 
   renderFrame(w, h, 'phone', displayScale);
 }
 
 // ===== APPLY CUSTOM =====
 function applyCustom() {
-  const w = parseInt(document.getElementById('customW').value) || 390;
-  const h = parseInt(document.getElementById('customH').value) || 844;
-  const scale = (parseFloat(document.getElementById('customScale').value) || 100) / 100;
+  const w = clampNumberInput(document.getElementById('customW'), 100, 4000, 390);
+  const h = clampNumberInput(document.getElementById('customH'), 100, 4000, 844);
+  const scale = clampNumberInput(document.getElementById('customScale'), 20, 150, 100) / 100;
   const frameType = document.getElementById('customFrameType').value;
 
   let ww = w, hh = h;
@@ -1396,90 +1852,160 @@ function renderFrame(w, h, frameType, scale) {
 
   frame.style.transform = `scale(${scale})`;
   frame.style.transformOrigin = 'center center';
-  frame.style.display = 'block';
+  /* Nothing is loaded yet -> keep the empty state alone on screen. */
+  frame.style.display = hasContent() ? 'block' : 'none';
 
   screen.style.width = w + 'px';
   screen.style.height = h + 'px';
   screen.style.borderRadius = frameType === 'phone' ? '28px' : (frameType === 'tablet' ? '12px' : '0');
 }
 
+// ===== CONTENT STATE =====
+const MAX_FILE_MB = 8;
+const MAX_FILE_BYTES = MAX_FILE_MB * 1024 * 1024;
+let loadingTimer = null;
+
+function hasContent() {
+  return isLocalFile ? !!currentHtmlContent : !!currentUrl;
+}
+
+/* The app never stores the previewed page; say so once something is loaded. */
+function updateUnsavedNote() {
+  const note = document.getElementById('unsavedNote');
+  if (note) note.hidden = !isLocalFile;
+}
+
 // ===== LOAD LOCAL FILE =====
-function loadLocalFile(event) {
-  const file = event.target.files[0];
+function loadLocalFile(file) {
   if (!file) return;
+  if (file.size > MAX_FILE_BYTES) {
+    toast(t('toastFileTooBig').replace('{max}', String(MAX_FILE_MB)));
+    return;
+  }
   const reader = new FileReader();
-  reader.onload = function(e) {
-    currentHtmlContent = e.target.result;
+  reader.onload = function (e) {
+    currentHtmlContent = String(e.target.result);
+    currentUrl = '';
     isLocalFile = true;
-    showPreview(currentHtmlContent);
+    showPreview();
+    toast(t('toastFileLoaded'));
   };
+  reader.onerror = function () { toast(t('toastNoContent')); };
   reader.readAsText(file);
 }
 
 // ===== LOAD FROM URL =====
+/* Only real web addresses are accepted: javascript:, data:, file: and other
+   schemes are rejected instead of being handed to the frame. */
 function loadFromUrl() {
-  const url = document.getElementById('urlInput').value.trim();
-  if (!url) { toast(t('toastInvalidUrl')); return; }
-  let finalUrl = url;
-  if (!/^https?:\/\//i.test(url)) finalUrl = 'https://' + url;
-  currentUrl = finalUrl;
+  const raw = document.getElementById('urlInput').value.trim();
+  if (!raw) { toast(t('toastInvalidUrl')); return; }
+  const candidate = /^[a-z][a-z0-9+.-]*:/i.test(raw) ? raw : 'https://' + raw;
+  let parsed = null;
+  try { parsed = new URL(candidate); } catch (e) { parsed = null; }
+  if (!parsed || !parsed.hostname || (parsed.protocol !== 'http:' && parsed.protocol !== 'https:')) {
+    toast(t('toastInvalidUrl'));
+    return;
+  }
+  currentUrl = parsed.href;
+  currentHtmlContent = null;
   isLocalFile = false;
-  showPreview(finalUrl);
+  document.getElementById('urlInput').value = currentUrl;
+  showPreview();
+}
+
+// ===== SANDBOX =====
+/* Content that would otherwise run on this origin is never given
+   allow-same-origin, so a previewed file cannot reach this app, its storage or
+   its other tabs. Remote pages keep their own origin (realistic cookies and
+   storage) but stay equally isolated from the app. */
+const SANDBOX_STRICT = 'allow-scripts allow-forms allow-popups allow-modals';
+const SANDBOX_REMOTE = 'allow-same-origin ' + SANDBOX_STRICT;
+
+function setFrameSandbox(allowSameOrigin) {
+  const iframe = document.getElementById('previewFrame');
+  iframe.setAttribute('sandbox', allowSameOrigin ? SANDBOX_REMOTE : SANDBOX_STRICT);
+}
+
+function isSameOrigin(url) {
+  try { return new URL(url, location.href).origin === location.origin; } catch (e) { return true; }
 }
 
 // ===== SHOW PREVIEW =====
-function showPreview(content) {
+function showPreview() {
   const emptyState = document.getElementById('emptyState');
   const frame = document.getElementById('deviceFrame');
   const iframe = document.getElementById('previewFrame');
   const loading = document.getElementById('loadingOverlay');
 
+  if (currentBlobUrl) { URL.revokeObjectURL(currentBlobUrl); currentBlobUrl = null; }
+
   emptyState.style.display = 'none';
   frame.style.display = 'block';
   loading.classList.add('active');
 
-  if (currentBlobUrl) { URL.revokeObjectURL(currentBlobUrl); currentBlobUrl = null; }
-
   if (isLocalFile) {
-    const blob = new Blob([content], { type: 'text/html' });
-    currentBlobUrl = URL.createObjectURL(blob);
-    iframe.src = currentBlobUrl;
+    setFrameSandbox(false);
+    iframe.removeAttribute('src');
+    iframe.srcdoc = currentHtmlContent;
   } else {
-    iframe.src = content;
+    setFrameSandbox(!isSameOrigin(currentUrl));
+    iframe.removeAttribute('srcdoc');
+    iframe.src = currentUrl;
   }
 
+  updateUnsavedNote();
   reapply();
-  iframe.onload = function() { loading.classList.remove('active'); };
-  setTimeout(() => loading.classList.remove('active'), 5000);
+  iframe.onload = function () { loading.classList.remove('active'); };
+  clearTimeout(loadingTimer);
+  loadingTimer = setTimeout(() => loading.classList.remove('active'), 5000);
 }
 
 function reloadPreview() {
+  if (!hasContent()) { toast(t('toastNoContent')); return; }
   const iframe = document.getElementById('previewFrame');
-  if (!iframe.src || iframe.src === 'about:blank') return;
   const loading = document.getElementById('loadingOverlay');
   loading.classList.add('active');
-  iframe.src = iframe.src;
-  setTimeout(() => loading.classList.remove('active'), 3000);
+  if (isLocalFile) iframe.srcdoc = currentHtmlContent;
+  else iframe.src = currentUrl;
+  updateUnsavedNote();
+  clearTimeout(loadingTimer);
+  loadingTimer = setTimeout(() => loading.classList.remove('active'), 3000);
 }
 
+/* Opens the current preview as a normal browser tab. The new tab never gets a
+   handle on this window (noopener). */
 function openInNewTab() {
-  const iframe = document.getElementById('previewFrame');
-  if (!iframe.src || iframe.src === 'about:blank') { toast(t('toastNoContent')); return; }
-  window.open(iframe.src, '_blank');
+  if (!hasContent()) { toast(t('toastNoContent')); return; }
+  let url = currentUrl;
+  if (isLocalFile) {
+    const blob = new Blob([currentHtmlContent], { type: 'text/html' });
+    url = URL.createObjectURL(blob);
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+  }
+  const tab = window.open(url, '_blank', 'noopener,noreferrer');
+  if (!tab) toast(t('toastNoContent'));
 }
 
 function resetAll() {
-  currentDevice = devices[1];
   currentRatio = null;
-  orientation = 'portrait';
   zoom = 100;
   document.getElementById('zoomLabel').textContent = '100%';
-  document.getElementById('btnPortrait').classList.add('active');
-  document.getElementById('btnLandscape').classList.remove('active');
+  document.getElementById('ratioBaseWidth').value = '390';
+  document.getElementById('ratioDisplayScale').value = '100';
+  syncScaleLabel('ratioDisplayScale', 'ratioScaleLabel');
+  document.getElementById('customW').value = '390';
+  document.getElementById('customH').value = '844';
+  document.getElementById('customScale').value = '100';
+  syncScaleLabel('customScale', 'customScaleLabel');
+  document.getElementById('customFrameType').value = 'phone';
   document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
+  setOrientation('portrait');
   switchMode('device');
   selectDevice('iphone-12');
+  toast(t('toastReset'));
+  document.getElementById('btnLoadFile').focus();
 }
 
 window.addEventListener('resize', () => {
@@ -1491,6 +2017,15 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   });
+  /* sw.js only posts this after it replaced an older cache, so the bar never
+     shows up on a first visit. Reloading stays the user's choice. */
+  navigator.serviceWorker.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'SW_UPDATED') {
+      const bar = document.getElementById('updateBar');
+      if (bar) bar.hidden = false;
+    }
+  });
+  document.getElementById('btnUpdateReload').addEventListener('click', () => window.location.reload());
 }
 
 init();
