@@ -875,6 +875,16 @@
 .tekideki-credits a:hover { text-decoration-thickness:2px; }
 .tekideki-credits a:focus-visible { outline:2px solid currentColor; outline-offset:4px; border-radius:2px; }
 
+
+
+  /* regula casei: tinte de atingere pe mobil */
+  @media (pointer: coarse), (max-width: 700px) {
+    #toolsToggle { min-height: 34px; display: inline-flex; align-items: center; }
+    #langSelect { min-height: 34px; }
+    #themeToggle { min-height: 34px; display: inline-flex; align-items: center; }
+    a:not(:where(p, li, figcaption) a) { min-height: 34px; display: inline-flex; align-items: center; }
+    #tekideki-source { min-height: 34px; display: inline-flex; align-items: center; }
+  }
 </style>
 <style id="td-install-styles">
 /* App-scoped install controls. Uses each app's existing theme; no external assets. */
@@ -894,6 +904,7 @@
 #td-install-secure{font-weight:650!important}
 #td-install-close{margin-top:4px}
 @media(prefers-reduced-motion:reduce){#td-install-button,#td-install-close{transition:none!important}}
+
 </style>
 </head>
 <body>
